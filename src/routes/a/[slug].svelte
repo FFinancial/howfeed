@@ -6,7 +6,7 @@
         const data = await res.json();
 
         if (res.status === 200) {
-            return { post: data };
+            return { article: data };
         } else {
             this.error(res.status, data.message);
         }
@@ -14,7 +14,7 @@
 </script>
 
 <script>
-    export let post;
+    export let article;
 </script>
 
 <style>
@@ -22,7 +22,7 @@
         By default, CSS is locally scoped to the component,
         and any unused styles are dead-code-eliminated.
         In this page, Svelte can't know which elements are
-        going to appear inside the {{{post.html}}} block,
+        going to appear inside the {{{article.html}}} block,
         so we have to use the :global(...) modifier to target
         all elements inside .content
     */
@@ -70,15 +70,15 @@
 </style>
 
 <svelte:head>
-    <title>{post.title} | HOWFEED.BIZ</title>
+    <title>{article.title} | HOWFEED.BIZ</title>
 </svelte:head>
 
 <div class="content">
     <figure class="article-image">
-        <img alt={post.title} src={`/a/${post.slug}.jpg`}>
+        <img alt={article.title} src={`/a/${article.slug}.jpg`}>
     </figure>
     <div class="article-meta">
-        <h1 class="article-title">{post.title}</h1>
+        <h1 class="article-title">{article.title}</h1>
     </div>
-    {@html post.html}
+    {@html article.html}
 </div>

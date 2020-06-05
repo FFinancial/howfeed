@@ -1,12 +1,13 @@
 <script context="module">
-    import posts from './a/_posts.js';
+    import articles from './a/_articles.js';
     export async function preload()
     {
-        return {articles: posts};
+        return { articles };
     }
 </script>
 
 <script>
+    import FakeTweet from '../components/FakeTweet.svelte';
     export let articles;
 </script>
 
@@ -103,6 +104,8 @@
                 <p class="article-date">{new Date(date).toLocaleDateString()}</p>
             </div>
         </a>
+    {:else}
+        <FakeTweet message="No articles found. SAD!" author="Donald J. Trump" verified likes=1488 replies=6969 handle="realDonaldTrump" avatar="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg" />
     {/each}
     </div>
 </div>

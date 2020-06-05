@@ -53,7 +53,6 @@ express()
     .post('/cms/login', passport.authenticate('local', {
         successRedirect: '/cms',
         failureRedirect: '/cms/login',
-        failureFlash: true,
     }))
 	.listen(PORT, err => {
 		if (err) console.log('error', err);
