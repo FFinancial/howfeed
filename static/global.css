@@ -3,13 +3,13 @@ body {
 	font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 	font-size: 14px;
 	line-height: 1.5;
-	color: #333;
+    color: #000;
+    background-color: rgb(150, 200, 234);
 }
 
 h1, h2, h3, h4, h5, h6 {
-	margin: 0 0 0.5em 0;
-	font-weight: 400;
-	line-height: 1.2;
+	font-weight: bold;
+	line-height: 1.1;
 }
 
 h1 {
@@ -18,6 +18,10 @@ h1 {
 
 a {
 	color: inherit;
+}
+
+a:hover {
+    color: #508FC3;
 }
 
 code {
@@ -29,8 +33,47 @@ code {
 	border-radius: 2px;
 }
 
-@media (min-width: 400px) {
+@media (min-width: 640px) {
 	body {
 		font-size: 16px;
 	}
+}
+
+div.article-list {
+    background: #508FC3;
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+div.article-list > a {
+    display: flex;
+    text-decoration: none;
+    flex-direction: row;
+    margin: 2rem;
+    align-items: start;
+}
+figure.article-image {
+    background: white;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    width: 33.33%;
+}
+figure.article-image img {
+    height: 12rem;
+    width: auto;
+}
+div.article-meta {
+    background: white;
+    margin: 2rem;
+    padding: 0.75rem;
+    line-height: 1;
+    font-weight: bold;
+    flex: 1 0 0;
+}
+.article-title {
+    font-size: 4rem;
+}
+.article-date {
+    font-size: 2rem;
 }

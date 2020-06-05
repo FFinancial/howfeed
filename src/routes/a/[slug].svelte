@@ -51,14 +51,35 @@
     .content :global(li) {
         margin: 0 0 0.5em 0;
     }
+
+    .content {
+        position: absolute;
+        background: #fff;
+        margin: 8rem;
+        padding: 2rem;
+    }
+
+    figure.article-image {
+        width: auto;
+        margin: 0;
+    }
+
+    div.article-meta {
+        margin: 0;
+        padding: 0;
+    }
 </style>
 
 <svelte:head>
-    <title>{post.title}</title>
+    <title>{post.title} | HOWFEED.BIZ</title>
 </svelte:head>
 
-<h1>{post.title}</h1>
-
-<div class='content'>
+<div class="content">
+    <figure class="article-image">
+        <img alt={post.title} src={`/a/${post.slug}.jpg`}>
+    </figure>
+    <div class="article-meta">
+        <h1 class="article-title">{post.title}</h1>
+    </div>
     {@html post.html}
 </div>

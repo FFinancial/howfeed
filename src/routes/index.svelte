@@ -1,48 +1,82 @@
+<script context="module">
+    import posts from './a/_posts.js';
+    export async function preload()
+    {
+        return {articles: posts};
+    }
+</script>
+
+<script>
+    export let articles;
+</script>
+
 <style>
-    h1, figure, p {
+    h1, h2 {
         text-align: center;
+    }
+    h1, h2, p {
         margin: 0 auto;
     }
-
     h1 {
-        font-size: 2.8em;
+        font-size: 3rem;
         text-transform: uppercase;
-        font-weight: 700;
-        margin: 0 0 0.5em 0;
     }
-
     figure {
-        margin: 0 0 1em 0;
+        margin: 0;
     }
-
     img {
         width: 100%;
-        max-width: 400px;
-        margin: 0 0 1em 0;
+        max-width: 640px;
+        margin: 1rem;
     }
-
-    p {
-        margin: 1em auto;
-    }
-
-    @media (min-width: 480px) {
-        h1 {
-            font-size: 4em;
+    @media (min-width: 640px) {
+        div.content {
+            padding-top: 5rem !important;
+        }
+        h1.welcome {
+            font-size: 8rem !important;
+        }
+        h2.desc {
+            font-size: 2rem !important;
         }
     }
-
+    @media (min-width: 1280px) {
+        h1.welcome {
+            font-size: 10rem !important;
+        }
+        h2.desc {
+            font-size: 3.5rem !important;
+        }
+    }
     div.background {
         background: url('/cityscape.jpg') no-repeat center;
         background-size: cover;
         position: fixed;
-        height: 16rem;
+        height: 24rem;
         width: 100vw;
         z-index: 0;
         filter: blur(5px);
     }
     div.content {
-        margin-top: 5rem;
+        padding-top: 8rem;
+        position: absolute;
         z-index: 1;
+        margin: 0 auto;
+        width: 100vw;
+    }
+    h1.welcome, h2.desc {
+        color: whitesmoke;
+    }
+    h1.welcome {
+        margin-top: 1rem;
+        font-size: 4rem;
+    }
+    h2 {
+        text-transform: uppercase;
+    }
+    h2.desc {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
     }
 </style>
 
@@ -52,8 +86,19 @@
 
 <div class="background"></div>
 <div class="content">
-    <h1 class="uppercase">Welcome</h1>
-    <figure>
-        <figcaption>Have fun with Sapper!</figcaption>
-    </figure>
+    <h1 class="welcome">Welcome</h1>
+    <h2 class="desc">Find an Article</h2>
+    <div class="article-list">
+    {#each articles as {title, slug, date}}
+        <a rel="prefetch" href={`/a/${slug}`}>
+            <figure class="article-image">
+                <img src={`/a/${slug}.jpg` || '/logo.png'} alt={title}>
+            </figure>
+            <div class="article-meta">
+                <p class="article-title">{title}</p>
+                <p class="article-date">{new Date(date).toLocaleDateString()}</p>
+            </div>
+        </a>
+    {/each}
+    </div>
 </div>
