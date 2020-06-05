@@ -1,7 +1,7 @@
 const posts = [
 	{
 		title: 'How To Disable ABS in Your Car',
-                date: 1590908400000,
+        date: 1590908400000,
 		html: `
 			<p>First, you have to know what <a href='https://svelte.dev'>Svelte</a> is. Svelte is a UI framework with a bold new idea: rather than providing a library that you write code with (like React or Vue, for example), it's a compiler that turns your components into highly optimized vanilla JavaScript. If you haven't already read the <a href='https://svelte.dev/blog/frameworks-without-the-framework'>introductory blog post</a>, you should!</p>
 
@@ -19,7 +19,7 @@ const posts = [
 	},
 	{
 		title: 'How to Pay Zero in Taxes',
-                date: 1590908400000,
+        date: 1590908400000,
 		html: `
 			<p>First, you have to know what <a href='https://svelte.dev'>Svelte</a> is. Svelte is a UI framework with a bold new idea: rather than providing a library that you write code with (like React or Vue, for example), it's a compiler that turns your components into highly optimized vanilla JavaScript. If you haven't already read the <a href='https://svelte.dev/blog/frameworks-without-the-framework'>introductory blog post</a>, you should!</p>
 
@@ -37,7 +37,7 @@ const posts = [
 	},
 	{
 		title: 'Here\'s Why Canned Water is Better',
-                date: 1590908400000,
+        date: 1590908400000,
 		html: `
 			<p>First, you have to know what <a href='https://svelte.dev'>Svelte</a> is. Svelte is a UI framework with a bold new idea: rather than providing a library that you write code with (like React or Vue, for example), it's a compiler that turns your components into highly optimized vanilla JavaScript. If you haven't already read the <a href='https://svelte.dev/blog/frameworks-without-the-framework'>introductory blog post</a>, you should!</p>
 
