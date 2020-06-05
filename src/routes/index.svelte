@@ -25,11 +25,11 @@
         margin: 0;
     }
     img {
-        width: 100%;
-        max-width: 640px;
+        object-fit: contain;
+        max-width: 100%;
         margin: 1rem;
     }
-    @media (min-width: 640px) {
+    @media (min-width: 800px) {
         div.homepage {
             padding-top: 5rem !important;
         }
@@ -70,7 +70,7 @@
     }
     h1.welcome {
         margin-top: 1rem;
-        font-size: 4rem;
+        font-size: 3.75rem;
     }
     h2 {
         text-transform: uppercase;
@@ -78,6 +78,9 @@
     h2.desc {
         margin-bottom: 1rem;
         font-size: 1.5rem;
+    }
+    div.article-list {
+        box-shadow: 0 0 5px #000;
     }
 </style>
 

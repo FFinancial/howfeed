@@ -52,7 +52,7 @@
         margin: 0 0 0.5em 0;
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 800px) {
         .content {
             width: 75vw;
         }

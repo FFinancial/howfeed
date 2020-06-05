@@ -20,7 +20,7 @@
 		margin: 1em auto;
     }
 
-	@media (min-width: 640px) {
+	@media (min-width: 800px) {
 		h1 {
 			font-size: 4em;
 		}

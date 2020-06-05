@@ -26,15 +26,20 @@
     }
     div.link a {
         text-decoration: none;
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     img.wordmark {
         height: 3rem;
+        max-width: 100%;
+        object-fit: contain;
     }
-    @media (min-width: 640px) {
+    @media (min-width: 800px) {
         div.items {
             flex-direction: row;
             align-items: end;
+        }
+        div.link a {
+            font-size: 2rem !important;
         }
     }
 </style>
