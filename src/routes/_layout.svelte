@@ -1,13 +1,10 @@
 <script>
     import Nav from '../components/Nav.svelte';
-
-    export let segment;
 </script>
 
 <style>
     main {
         max-width: 100vw;
-        background: #fff;
         box-sizing: border-box;
     }
     footer {
@@ -17,12 +14,13 @@
         bottom: 0;
         width: 100%;
         background: #fff;
+        box-shadow: 0 2px 5px #000;
         padding: 1rem;
         z-index: 1;
     }
 </style>
 
-<Nav {segment}/>
+<Nav />
 
 <main>
     <slot></slot>

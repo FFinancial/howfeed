@@ -52,11 +52,10 @@
         margin: 0 0 0.5em 0;
     }
 
-    .content {
-        position: absolute;
-        background: #fff;
-        margin: 8rem;
-        padding: 2rem;
+    @media (min-width: 640px) {
+        .content {
+            width: 75vw;
+        }
     }
 
     figure.article-image {

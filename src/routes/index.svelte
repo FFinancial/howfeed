@@ -30,7 +30,7 @@
         margin: 1rem;
     }
     @media (min-width: 640px) {
-        div.content {
+        div.homepage {
             padding-top: 5rem !important;
         }
         h1.welcome {
@@ -57,8 +57,9 @@
         z-index: 0;
         filter: blur(5px);
     }
-    div.content {
+    div.homepage {
         padding-top: 8rem;
+        padding-bottom: 4rem;
         position: absolute;
         z-index: 1;
         margin: 0 auto;
@@ -85,7 +86,7 @@
 </svelte:head>
 
 <div class="background"></div>
-<div class="content">
+<div class="homepage">
     <h1 class="welcome">Welcome</h1>
     <h2 class="desc">Find an Article</h2>
     <div class="article-list">

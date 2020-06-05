@@ -18,7 +18,7 @@
 
 	p {
 		margin: 1em auto;
-	}
+    }
 
 	@media (min-width: 640px) {
 		h1 {
@@ -28,13 +28,13 @@
 </style>
 
 <svelte:head>
-	<title>{status}</title>
+	<title>Error {status} | HOWFEED.BIZ</title>
 </svelte:head>
 
-<h1>{status}</h1>
-
-<p>{error.message}</p>
-
-{#if dev && error.stack}
-	<pre>{error.stack}</pre>
-{/if}
+<div class="content">
+    <h1>Error {status}</h1>
+    <p>{error.message}</p>
+    {#if dev && error.stack}
+        <pre>{error.stack}</pre>
+    {/if}
+</div>

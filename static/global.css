@@ -36,7 +36,10 @@ code {
 @media (min-width: 640px) {
 	body {
 		font-size: 16px;
-	}
+    }
+    .content {
+        margin: 8rem auto !important;
+    }
 }
 
 div.article-list {
@@ -76,4 +79,10 @@ div.article-meta {
 }
 .article-date {
     font-size: 2rem;
+}
+
+.content {
+    background: #fff;
+    margin: 8rem 0;
+    padding: 2rem;
 }

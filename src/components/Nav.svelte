@@ -1,7 +1,3 @@
-<script>
-	export let segment;
-</script>
-
 <style>
     nav {
         font-weight: bold;
@@ -11,6 +7,7 @@
         z-index: 100;
         background-color: #fff;
         top: 0;
+        box-shadow: 0 -2px 5px #000;
     }
     div.items {
         margin: 0;
