@@ -4,12 +4,13 @@ A satirical blog with its own lightweight CMS, which all runs on [Sapper](https:
 
 ## Setup
 
-Requires Node.js and SQLite
+Requires Node.js and MongoDB
+
+Create a MongoDB database for howfeed
 
 Set up `.env.example` as `.env`
 
 ```sh
-sqlite3 storage/howfeed.db < storage/init.sql
 npm i
 npm run dev
 ```
