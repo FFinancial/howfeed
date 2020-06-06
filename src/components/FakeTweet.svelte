@@ -19,6 +19,10 @@
         .replace(/@([a-zA-Z0-9_]{1,15})/g, `<a href=${link} class="PrettyLink profile customisable h-card" dir="ltr"><span class="PrettyLink-prefix">@</span><span class="PrettyLink-value">$1</span></a>`);
 </script>
 
+<style>
+    @import '/tweet.css';
+</style>
+
 <div class="SandboxRoot env-bp-350">
     <div class="EmbeddedTweet EmbeddedTweet--cta js-clickToOpenTarget" id="twitter-widget-0" lang="en">
 

@@ -105,7 +105,7 @@
             </div>
         </a>
     {:else}
-        <FakeTweet message="No articles found. SAD!" author="Donald J. Trump" verified likes=1488 replies=6969 handle="realDonaldTrump" avatar="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg" />
+        <FakeTweet message="No articles found. SAD!" author="Donald J. Trump" verified likes=1488 replies=6969 handle="realDonaldTrump" avatar="/realDonaldTrump.jpg" />
     {/each}
     </div>
 </div>
