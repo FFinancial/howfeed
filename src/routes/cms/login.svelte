@@ -1,7 +1,3 @@
-<script>
-    let username, password;
-</script>
-
 <style>
     input {
         display: block;
@@ -26,8 +22,8 @@
 <div class="content">
     <h1>Login</h1>
     <form method="POST" action="/cms/login">
-        <input required type="text" name="username" bind:value={username} placeholder="Username">
-        <input required type="password" name="password" bind:value={password} placeholder="Password">
+        <input required type="text" name="username" placeholder="Username">
+        <input required type="password" name="password" placeholder="Password">
         <button type="submit">Submit</button>
     </form>
 </div>

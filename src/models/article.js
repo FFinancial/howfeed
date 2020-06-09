@@ -9,16 +9,25 @@ const ArticleSchema = new Schema({
     },
     slug: { type: String, required: true, index: { unique: true } },
     created_at: { type: Date, default: Date.now },
-    html: { type: Blob, required: true },
+    html: { type: String, required: true },
     comments: [{
         content: { type: String, required: true },
         author: { type: String, required: true },
         created_at: { type: Date, default: Date.now },
         votes: { type: Number, default: 0 }
     }],
+    views: { type: Number, default: 0 },
     votes: { type: Number, default: 0 }
 });
 
+
+ArticleSchema.methods.genSlug = () => this.title.toLowerCase().replace(/\W+/g, '-');
+
+ArticleSchema.pre('findOne', next => {
+    var article = this;
+    article.views++;
+    next();
+});
 
 ArticleSchema.pre('save', next => {
     var article = this;
@@ -28,7 +37,5 @@ ArticleSchema.pre('save', next => {
     article.slug = article.genSlug(article.title);
     next();
 });
-
-ArticleSchema.methods.genSlug = () => this.title.toLowerCase().replace(/\W+/g, '-');
 
 export default mongoose.model('Article', ArticleSchema);

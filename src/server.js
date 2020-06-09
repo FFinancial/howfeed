@@ -84,5 +84,5 @@ express()
 
     .listen(PORT, err => {
         if (err) console.log('error', err);
-        console.log('Express server listening');
+        console.log(`Express server listening on port ${PORT}`);
     });
