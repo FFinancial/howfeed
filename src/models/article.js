@@ -23,17 +23,17 @@ const ArticleSchema = new Schema({
 
 ArticleSchema.methods.genSlug = () => this.title.toLowerCase().replace(/\W+/g, '-');
 
-ArticleSchema.pre('findOne', next => {
+ArticleSchema.pre('findOne', function (next) {
     var article = this;
     article.views++;
     next();
 });
 
-ArticleSchema.pre('save', next => {
+ArticleSchema.pre('save', function (next) {
     var article = this;
     // only gen the slug if title has been modified (or is new)
     if (!article.isModified('title')) return next();
-    
+
     article.slug = article.genSlug(article.title);
     next();
 });

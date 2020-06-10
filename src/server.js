@@ -31,6 +31,7 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((obj, cb) => {
     cb(null, obj);
 });
+
 passport.use(new Strategy((username, password, done) => {
     User.findOne({ username }, (err, user) => {
         if (err) done(err);
@@ -53,6 +54,7 @@ passport.use(new Strategy((username, password, done) => {
 express()
     .use(passport.initialize())
     .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))
     .use(session({
         secret: SESSION_SECRET,
         resave: false,
@@ -62,7 +64,80 @@ express()
             path: '.sessions'
         })
     }))
-    
+
+    .post('/cms/register',
+        (req, res, next) => {
+            if (!req.user) {
+                next();
+            } else {
+                res.writeHead(401, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `You are already logged in`
+                }));
+            }
+        }, async (req, res) => {
+            let { username, password, password_confirm } = req.body;
+            if (!username || !password || !password_confirm) {
+                res.writeHead(422, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `You need to supply a username, password, and password_confirm.`
+                }));
+                return false;
+            }
+            if (password.length < 8) {
+                res.writeHead(422, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `The password must be at least 8 characters long.`
+                }));
+                return false;
+            }
+            if (password !== password_confirm) {
+                res.writeHead(422, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `The password does not match the confirmation.`
+                }));
+                return false;
+            }
+            try {
+                const user = await User.findOne({ username: req.body.username });
+                if (user) {
+                    res.writeHead(401, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `This username is taken.`
+                    }));
+                    return false;
+                }
+                // password gets automatically hashed
+                const newUser = await new User({ username, password });
+                await newUser.save();
+
+                req.login(newUser, err => {
+                    if (err) throw err;
+                    return res.redirect('/cms');
+                });
+            } catch (err) {
+                console.error(err);
+                res.writeHead(500, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `Internal server error`
+                }));
+                return false;
+            }
+        }
+    )
+
     .post('/cms/login',
         passport.authenticate('local', {
             successRedirect: '/cms',
