@@ -59,7 +59,10 @@ express()
         secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: true },
+        cookie: {
+            httpOnly: true,
+            maxAge: 31536000
+        },
         store: new FileStore({
             path: '.sessions'
         })
@@ -139,21 +142,35 @@ express()
     )
 
     .post('/cms/login',
-        passport.authenticate('local', {
-            successRedirect: '/cms',
-            failureRedirect: '/cms/login',
-        }),
-        (req, res) => {
-            res.redirect('/');
-            //console.log(req.user.username);
+        passport.authenticate('local', { failWithError: true }),
+        function(req, res, next) {
+            // handle success
+            return res.redirect('/cms');
+        },
+        function(err, req, res, next) {
+            // handle error
+            res.writeHead(err.status || 500, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: err.message
+            }));
         }
     )
+
+    .get('/cms/logout', (req, res, next) => {
+        req.logout();
+        req.session.destroy(function (err) {
+            if (err) next(err);
+            return res.redirect('/');
+        });
+    })
 
     .use(compression({ threshold: 0 }))
     .use(sirv('static', { dev }))
     .use(sapper.middleware({
         session: req => ({
-            user: req.session.passport ? req.session.passport.user.username : null
+            user: req.session.passport ? req.session.passport.user : null
         })
     }))
 
