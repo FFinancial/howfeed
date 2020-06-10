@@ -8,11 +8,27 @@
     }
 </script>
 
+<script>
+    import { onMount } from 'svelte';
+    import Editor from 'cl-editor/src/Editor.svelte';
+
+    let editor;
+
+    function preview()
+    {
+        alert(editor.getHtml(true));
+    }
+</script>
+
+<svelte:head>
+    <title>Publish | HOWFEED.BIZ</title>
+</svelte:head>
+
 <div class="content">
     <h1>HowFeed Publisher</h1>
     <form method="POST" action="/cms/article">
-        
-        <textarea name="content"></textarea>
+        <Editor bind:this={editor} />
+        <button on:click|preventDefault={preview}>Preview</button>
         <button type="submit">Submit</button>
     </form>
 </div>

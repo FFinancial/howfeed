@@ -14,6 +14,7 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
+    "cl-editor": "^2.0.0",
     "compression": "^1.7.1",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
