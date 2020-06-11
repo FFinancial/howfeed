@@ -7,7 +7,8 @@ const ArticleSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    slug: { type: String, required: true, index: { unique: true } },
+    slug: { type: String, index: { unique: true } },
+    image: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     html: { type: String, required: true },
     comments: [{
@@ -21,7 +22,14 @@ const ArticleSchema = new Schema({
 });
 
 
-ArticleSchema.methods.genSlug = () => this.title.toLowerCase().replace(/\W+/g, '-');
+ArticleSchema.virtual('author_user', {
+    ref: 'User',
+    localField: 'author',
+    foreignField: '_id',
+    justOne: true
+});
+
+ArticleSchema.methods.genSlug = title => title.toLowerCase().replace(/\W+/g, '-');
 
 ArticleSchema.pre('findOne', function (next) {
     var article = this;

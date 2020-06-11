@@ -199,15 +199,42 @@ express()
                 }));
             }
         },
-        function(req, res, next) {
-            res.writeHead(200, {
-                'Content-Type': 'application/json'
-            });
-            res.end(JSON.stringify({
-                message: `ur a faget lol`
-            }));
+        async function(req, res, next) {
+            try {
+                const { html, title, image } = req.body;
+                if (!title || !image || !html) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `You must supply an article title, image URL, and content.`
+                    }));
+                }
+                const article = await new Article({ html, title, image, author: req.user._id });
+                await article.save();
+                res.redirect(`/a/${article.slug}`);
+            } catch (err) {
+                res.writeHead(500, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `Failed to add article: ${err}`
+                }));
+            }
         }
     )
+
+    .get('/a/all', async function (req, res, next) {
+        let articles = await Article.find().populate('author_user');
+        articles.forEach(article => {
+            article.slug = article.title.toLowerCase().replace(/\W+/g, '-');
+            article.html = article.html.replace(/^\t{3}/gm, '');
+        });
+        res.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify(articles));
+    })
 
     .use(compression({ threshold: 0 }))
     .use(sirv('static', { dev }))

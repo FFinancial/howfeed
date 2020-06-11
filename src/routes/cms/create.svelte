@@ -1,8 +1,8 @@
 <script context="module">
     export async function preload(page, session)
     {
-        if (!session.user) {
-            return this.redirect(302, '/cms/login');
+        if (!session.user || !session.user.author) {
+            return this.redirect(302, '/cms');
         }
         return { user: session.user };
     }
@@ -52,14 +52,14 @@
 </style>
 
 <svelte:head>
-    <title>Publish | HOWFEED.BIZ</title>
+    <title>Publish Article | HOWFEED.BIZ</title>
 </svelte:head>
 
 <div class="content">
     <a href="/cms">&lt; Back to Dashboard</a>
     <h1>HowFeed Publisher</h1>
     <form method="POST" action="/cms/article" bind:this={form}>
-        <input type="hidden" name="html" bind:value={html}>
+        <input type="hidden" name="html" value={html}>
         <p>Article Title: <input type="text" name="title" required placeholder="How to Assassinate the Governor of California"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
         <p>Article Header Image URL: <input type="text" name="image" required placeholder="http:// ..."></p>

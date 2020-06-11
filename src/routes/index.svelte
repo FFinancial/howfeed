@@ -1,7 +1,8 @@
 <script context="module">
-    import articles from './a/_articles.js';
     export async function preload()
     {
+        const res = await this.fetch(`/a/all`);
+        const articles = await res.json();
         return { articles };
     }
 </script>
@@ -94,14 +95,14 @@
     <h1 class="welcome">Welcome</h1>
     <h2 class="desc">Find an Article</h2>
     <div class="article-list">
-    {#each articles as {title, slug, date}}
+    {#each articles as {title, slug, image, created_at}}
         <a rel="prefetch" href={`/a/${slug}`}>
             <figure class="article-image">
-                <img src={`/a/${slug}.jpg` || '/logo.png'} alt={title}>
+                <img src={image || '/logo.png'} alt={title}>
             </figure>
             <div class="article-meta">
                 <p class="article-title">{title}</p>
-                <p class="article-date">{new Date(date).toLocaleDateString()}</p>
+                <p class="article-date">{new Date(created_at).toLocaleDateString()}</p>
             </div>
         </a>
     {:else}
