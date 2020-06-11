@@ -1,7 +1,3 @@
-<script>
-    let username, password, password_confirm;
-</script>
-
 <style>
     input {
         display: block;
@@ -26,9 +22,10 @@
 <div class="content">
     <h1>Register</h1>
     <form method="POST" action="/cms/register">
-        <input required type="text" name="username" bind:value={username} placeholder="Username">
-        <input required type="password" name="password" bind:value={password} placeholder="Password">
-        <input required type="password" name="password_confirm" bind:value={password_confirm} placeholder="Confirm Password">
+        <input required type="text" name="realname" placeholder="Real Name">
+        <input required type="text" name="username" placeholder="Username">
+        <input required type="password" name="password" placeholder="Password">
+        <input required type="password" name="password_confirm" placeholder="Confirm Password">
         <button type="submit">Submit</button>
     </form>
 </div>

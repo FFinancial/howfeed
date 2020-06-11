@@ -1,3 +1,8 @@
+<script>
+    import { stores } from '@sapper/app';
+    const { session } = stores();
+</script>
+
 <style>
     nav {
         font-weight: bold;
@@ -48,6 +53,10 @@
     <div class="items">
         <div><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
         <div class="filler"></div>
-        <div class="link"><a href="mailto:the_katze@naver.com">Contact Us</a></div>
+        {#if !$session.user}
+            <div class="link"><a href="mailto:the_katze@naver.com">Contact Us</a></div>
+        {:else}
+            <div class="link"><a href="/cms/logout">Logout</a></div>
+        {/if}
     </div>
 </nav>

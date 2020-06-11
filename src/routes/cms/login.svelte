@@ -26,4 +26,5 @@
         <input required type="password" name="password" placeholder="Password">
         <button type="submit">Submit</button>
     </form>
+    <p>Need an account first? <a href="/cms/register">Register</a></p>
 </div>

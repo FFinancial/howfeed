@@ -7,7 +7,8 @@ const { SALT_WORK_FACTOR } = process.env;
 const { Schema } = mongoose;
 const UserSchema = new Schema({
     username: { type: String, required: true, index: { unique: true } },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    realname: { type: String, required: true }
 });
 
 

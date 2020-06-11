@@ -81,13 +81,13 @@ express()
                 }));
             }
         }, async (req, res) => {
-            let { username, password, password_confirm } = req.body;
-            if (!username || !password || !password_confirm) {
+            let { username, password, password_confirm, realname } = req.body;
+            if (!username || !password || !password_confirm || !realname) {
                 res.writeHead(422, {
                     'Content-Type': 'application/json'
                 });
                 res.end(JSON.stringify({
-                    message: `You need to supply a username, password, and password_confirm.`
+                    message: `You need to supply a username, real name, password, and password confirmation.`
                 }));
                 return false;
             }
@@ -121,7 +121,7 @@ express()
                     return false;
                 }
                 // password gets automatically hashed
-                const newUser = await new User({ username, password });
+                const newUser = await new User({ username, realname, password });
                 await newUser.save();
 
                 req.login(newUser, err => {
@@ -165,6 +165,27 @@ express()
             return res.redirect('/');
         });
     })
+
+    .post('/cms/article',
+        passport.authenticate('local'),
+        function(req, res, next) {
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: `ur a faget lol`
+            }));
+        },
+        function(err, req, res, next) {
+            // handle error
+            res.writeHead(err.status || 500, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: err.message
+            }));
+        }
+    )
 
     .use(compression({ threshold: 0 }))
     .use(sirv('static', { dev }))
