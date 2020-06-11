@@ -56,6 +56,8 @@
         {#if !$session.user}
             <div class="link"><a href="mailto:the_katze@naver.com">Contact Us</a></div>
         {:else}
+            <div class="link"><a href="/cms">Dashboard</a></div>
+            <div class="filler"></div>
             <div class="link"><a href="/cms/logout">Logout</a></div>
         {/if}
     </div>

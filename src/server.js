@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import sessionFileStore from 'session-file-store';
+import Article from './models/article.js';
 import User from './models/user.js';
 
 require('dotenv').config();
@@ -52,7 +53,6 @@ passport.use(new Strategy((username, password, done) => {
 }));
 
 express()
-    .use(passport.initialize())
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(session({
@@ -67,9 +67,11 @@ express()
             path: '.sessions'
         })
     }))
+    .use(passport.initialize())
+    .use(passport.session())
 
     .post('/cms/register',
-        (req, res, next) => {
+        function(req, res, next) {
             if (!req.user) {
                 next();
             } else {
@@ -106,6 +108,15 @@ express()
                 });
                 res.end(JSON.stringify({
                     message: `The password does not match the confirmation.`
+                }));
+                return false;
+            }
+            if (!/^[a-z0-9.]+$/i.test(username)) {
+                res.writeHead(422, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `The username can only contain letters, numbers, and periods.`
                 }));
                 return false;
             }
@@ -167,22 +178,33 @@ express()
     })
 
     .post('/cms/article',
-        passport.authenticate('local'),
+        function(req, res, next) {
+            if (req.user) {
+                if (req.user.author) {
+                    next();
+                } else {
+                    res.writeHead(401, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `You are not designated as an author.`
+                    }));
+                }
+            } else {
+                res.writeHead(401, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `You are not logged in`
+                }));
+            }
+        },
         function(req, res, next) {
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
             res.end(JSON.stringify({
                 message: `ur a faget lol`
-            }));
-        },
-        function(err, req, res, next) {
-            // handle error
-            res.writeHead(err.status || 500, {
-                'Content-Type': 'application/json'
-            });
-            res.end(JSON.stringify({
-                message: err.message
             }));
         }
     )

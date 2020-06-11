@@ -24,7 +24,7 @@ module.exports = {
 						options: {
 							dev,
 							hydratable: true,
-							hotReload: false // pending https://github.com/sveltejs/svelte/issues/2377
+							hotReload: true,
 						}
 					}
 				}
@@ -39,7 +39,7 @@ module.exports = {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 		].filter(Boolean),
-		devtool: dev && 'inline-source-map'
+		devtool: dev && 'inline-source-map',
 	},
 
 	server: {
@@ -66,7 +66,7 @@ module.exports = {
 		mode: process.env.NODE_ENV,
 		performance: {
 			hints: false // it doesn't matter if server.js is large
-		}
+		},
 	},
 
 	serviceworker: {
