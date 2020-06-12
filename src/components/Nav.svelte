@@ -8,7 +8,7 @@
         font-weight: bold;
         padding: 1rem 0 0 0;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         z-index: 100;
         background-color: #fff;
         top: 0;
@@ -45,6 +45,7 @@
         }
         div.link a {
             font-size: 2rem !important;
+            margin-left: 4rem;
         }
     }
 </style>
@@ -54,10 +55,9 @@
         <div><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
         <div class="filler"></div>
         {#if !$session.user}
-            <div class="link"><a href="mailto:the_katze@naver.com">Contact Us</a></div>
+            <div class="link"><a href="/contact">Contact Us</a></div>
         {:else}
             <div class="link"><a href="/cms">Dashboard</a></div>
-            <div class="filler"></div>
             <div class="link"><a href="/cms/logout">Logout</a></div>
         {/if}
     </div>
