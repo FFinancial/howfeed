@@ -1,13 +1,4 @@
-<script>
-    import Footer from '../components/Footer.svelte';
-    import Nav from '../components/Nav.svelte';
-</script>
-
 <style>
-    main {
-        max-width: 100vw;
-        box-sizing: border-box;
-    }
     footer {
         box-sizing: border-box;
         text-align: center;
@@ -21,9 +12,6 @@
     }
 </style>
 
-<Nav />
-
-<main>
-    <slot></slot>
-    <Footer />
-</main>
+<footer>
+    Copyright &copy; {new Date().getFullYear()} FemboyFinancial Holdings Co., Ltd. (USA LLC). All rights reserved.
+</footer>
