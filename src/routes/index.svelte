@@ -55,7 +55,7 @@
         background-size: cover;
         position: fixed;
         height: 24rem;
-        width: 100vw;
+        width: 100%;
         z-index: 0;
         filter: blur(5px);
     }
@@ -65,7 +65,7 @@
         position: absolute;
         z-index: 1;
         margin: 0 auto;
-        width: 100vw;
+        width: 100%;
     }
     h1.welcome, h2.desc {
         color: whitesmoke;
@@ -83,6 +83,9 @@
     }
     div.article-list {
         box-shadow: 0 0 5px #000;
+    }
+    div.article-meta {    
+        font-weight: bold;
     }
 </style>
 
@@ -106,7 +109,8 @@
             </div>
         </a>
     {:else}
-        <FakeTweet message="No articles found. SAD!" author="Donald J. Trump" verified likes=1488 replies=6969 handle="realDonaldTrump" avatar="/realDonaldTrump.jpg" />
+        <p>No articles have been published yet :(</p>
+        <p>Come back soon!</p>
     {/each}
     </div>
 </div>
