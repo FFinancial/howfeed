@@ -10,6 +10,8 @@ const alias = { svelte: path.resolve('node_modules', 'svelte') };
 const extensions = ['.mjs', '.js', '.json', '.svelte', '.html'];
 const mainFields = ['svelte', 'module', 'browser', 'main'];
 
+const onwarn = (warning, handler) => warning.code === 'css-unused-selector' || handler(warning);
+
 module.exports = {
 	client: {
 		entry: config.client.entry(),
@@ -24,7 +26,8 @@ module.exports = {
 						options: {
 							dev,
 							hydratable: true,
-							hotReload: true,
+                            hotReload: true,
+                            onwarn
 						}
 					}
 				}
@@ -57,7 +60,8 @@ module.exports = {
 						options: {
 							css: false,
 							generate: 'ssr',
-							dev
+                            dev,
+                            onwarn
 						}
 					}
 				}
