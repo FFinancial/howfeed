@@ -88,8 +88,14 @@
     }
 
     div.article-meta {
-        margin: 0 0 4rem 0;
+        margin: 0 0 2rem 0;
         padding: 0;
+    }
+
+    div.article-meta blockquote {
+        border-left: 2px solid gray;
+        padding-left: 0.5rem;
+        margin: 0;
     }
 
     div.article-meta h1 {
@@ -114,6 +120,10 @@
     p.comment-meta {
         margin: 0;
     }
+
+    div.article-content {
+        margin-bottom: 2rem;
+    }
 </style>
 
 <svelte:head>
@@ -126,11 +136,15 @@
     </figure>
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>
-        <p>Author: <strong>{article.author.realname}</strong></p>
-        <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
-        <p>Views: <strong>{article.views}</strong></p>
+        <blockquote>
+            <p>Author: <strong>{article.author.realname}</strong></p>
+            <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
+            <p>Views: <strong>{article.views}</strong></p>
+        </blockquote>
     </div>
-    {@html article.html}
+    <div class="article-content">
+        {@html article.html}
+    </div>
     <hr>
     <h3>Comments</h3>
     <div class="comments">
