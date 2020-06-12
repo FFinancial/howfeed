@@ -30,7 +30,7 @@
         });
         const json = await res.json();
         if (json.message) {
-            alert(message);
+            alert(json.message);
         } else if (Array.isArray(json)) {
             article.comments = json;
             author = content = '';
