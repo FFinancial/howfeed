@@ -9,13 +9,13 @@
 </script>
 
 <script>
-    import { stores } from '@sapper/app';
+    import { stores, goto } from '@sapper/app';
     import Editor from 'cl-editor/src/Editor.svelte';
 
     const { session } = stores();
 
-    let editor, form;
-    let html;
+    let editor;
+    let title = '', image = '';
 
     let actions = [
         'viewHtml', 'undo', 'redo', 'b', 'i', 'u', 'strike', 'sup', 'sub', 'h1', 'h2', 'p', 'blockquote',
@@ -40,8 +40,17 @@
 
     async function submit()
     {
-        html = editor.getHtml(true);
-        form.submit();
+        let html = editor.getHtml(true);
+        const res = await fetch(`/cms/article`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ html, image, title })
+        });
+        const json = await res.json();
+        goto(`/a/${json.slug}`);
     }
 </script>
 
@@ -58,11 +67,10 @@
 <div class="content">
     <a href="/cms">&lt; Back to Dashboard</a>
     <h1>HowFeed Publisher</h1>
-    <form method="POST" action="/cms/article" bind:this={form}>
-        <input type="hidden" name="html" value={html}>
-        <p>Article Title: <input type="text" name="title" required placeholder="How to Assassinate the Governor of California"></p>
+    <form method="POST" action="/cms/article">
+        <p>Article Title: <input type="text" name="title" bind:value={title} required placeholder="How to Assassinate the Governor of California"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
-        <p>Article Header Image URL: <input type="text" name="image" required placeholder="http:// ..."></p>
+        <p>Article Header Image URL: <input type="text" name="image" bind:value={image} required placeholder="http:// ..."></p>
     </form>
     <Editor bind:this={editor} {actions} />
     <button on:click={submit}>Submit</button>
