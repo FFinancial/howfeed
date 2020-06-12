@@ -15,6 +15,27 @@
 
 <script>
     export let article;
+
+    let author = '', content = '';
+
+    async function postComment()
+    {
+        const res = await fetch(`/a/${article.slug}/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ author, content })
+        });
+        const json = await res.json();
+        if (json.message) {
+            alert(message);
+        } else if (Array.isArray(json)) {
+            article.comments = json;
+            author = content = '';
+        }
+    }
 </script>
 
 <style>
@@ -56,6 +77,9 @@
         .content {
             width: 75vw;
         }
+        form input, form textarea {
+            width: 25% !important;
+        }
     }
 
     figure.article-image {
@@ -70,6 +94,25 @@
 
     div.article-meta h1 {
         margin-bottom: 0;
+    }
+
+    form input, form textarea {
+        width: 100%;
+    }
+
+    span.comment-username {
+        font-weight: bold;
+    }
+
+    div.comment {
+        background-color: rgb(150, 200, 234);
+        border: 1px solid #508FC3;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    p.comment-meta {
+        margin: 0;
     }
 </style>
 
@@ -88,4 +131,24 @@
         <p>Views: <strong>{article.views}</strong></p>
     </div>
     {@html article.html}
+    <hr>
+    <h3>Comments</h3>
+    <div class="comments">
+    {#each article.comments as comment}
+        <div class="comment">
+            <p class="comment-meta">
+                <span class="comment-username">{comment.author}</span> - {new Date(comment.created_at).toLocaleString()}
+            </p>
+            <div>{comment.content}</div>
+        </div>
+    {:else}
+        <p>No comments.</p>
+    {/each}
+    </div>
+    <h3>Add a Comment</h3>
+    <form method="POST" action={`/a/${article.slug}/comment`}>
+        <p>Name: <input type="text" bind:value={author} name="author" maxlength="100" placeholder="Anonymous"></p>
+        <p><textarea name="content" bind:value={content} maxlength="5000"></textarea></p>
+        <p><button type="submit" on:click|preventDefault={postComment}>Submit</button></p>
+    </form>
 </div>
