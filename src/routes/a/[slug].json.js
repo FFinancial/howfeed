@@ -27,6 +27,25 @@ export async function get(req, res, next) {
 }
 
 export async function del(req, res, next) {
+    if (!req.user) {
+        res.writeHead(401, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+            message: `You are not logged in`
+        }));
+        return;
+    }
+    if (!req.user.author) {
+        res.writeHead(401, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+            message: `You are not designated as an author.`
+        }));
+        return;
+    }
+
     const { slug } = req.params;
     const article = await Article.findOneAndDelete({ slug });
 
