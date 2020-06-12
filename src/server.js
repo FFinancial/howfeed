@@ -212,7 +212,12 @@ express()
                 }
                 const article = await new Article({ html, title, image, author: req.user._id });
                 await article.save();
-                res.redirect(`/a/${article.slug}`);
+                res.writeHead(200, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    slug: article.slug
+                }));
             } catch (err) {
                 res.writeHead(500, {
                     'Content-Type': 'application/json'
@@ -225,7 +230,10 @@ express()
     )
 
     .get('/a/all', async function (req, res, next) {
-        let articles = await Article.find().populate('author_user');
+        let articles = await Article.find().sort({ created_at: 'desc' }).populate({
+            path: 'author',
+            select: 'realname'
+        });
         articles.forEach(article => {
             article.slug = article.title.toLowerCase().replace(/\W+/g, '-');
             article.html = article.html.replace(/^\t{3}/gm, '');
@@ -234,6 +242,22 @@ express()
             'Content-Type': 'application/json'
         });
         res.end(JSON.stringify(articles));
+    })
+
+    .get('/me', function(req, res, next) {
+        if (req.user) {
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify(req.user));
+        } else {
+            res.writeHead(401, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: `You are not logged in`
+            }));
+        }
     })
 
     .use(compression({ threshold: 0 }))

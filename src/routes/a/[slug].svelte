@@ -64,8 +64,12 @@
     }
 
     div.article-meta {
-        margin: 0;
+        margin: 0 0 4rem 0;
         padding: 0;
+    }
+
+    div.article-meta h1 {
+        margin-bottom: 0;
     }
 </style>
 
@@ -79,6 +83,9 @@
     </figure>
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>
+        <p>Author: <strong>{article.author.realname}</strong></p>
+        <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
+        <p>Views: <strong>{article.views}</strong></p>
     </div>
     {@html article.html}
 </div>

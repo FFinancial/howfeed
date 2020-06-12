@@ -15,12 +15,17 @@
 </svelte:head>
 
 <script>
+    import { goto } from '@sapper/app';
     export let articles;
 
-    function del(article)
+    async function del(article)
     {
         if (confirm(`Are you sure you want to delete "${article.title}"?`)) {
-            alert('ok');
+            await fetch(`/a/${article.slug}.json`, {
+                method: 'DELETE'
+            });
+            const res = await fetch(`/a/all`);
+            articles = await res.json();
         }
     }
 </script>
@@ -31,7 +36,8 @@
     <ul>
     {#each articles as article}
         <li>
-            <strong>{article.title}</strong> by <strong>{article.author_user}</strong>
+            <strong>{article.title}</strong> by <strong>{article.author.realname}</strong>
+            ({article.views} views)
             <button on:click={() => { del(article) }}>Delete</button>
         </li>
     {:else}

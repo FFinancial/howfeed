@@ -22,20 +22,7 @@ const ArticleSchema = new Schema({
 });
 
 
-ArticleSchema.virtual('author_user', {
-    ref: 'User',
-    localField: 'author',
-    foreignField: '_id',
-    justOne: true
-});
-
 ArticleSchema.methods.genSlug = title => title.toLowerCase().replace(/\W+/g, '-');
-
-ArticleSchema.pre('findOne', function (next) {
-    var article = this;
-    article.views++;
-    next();
-});
 
 ArticleSchema.pre('save', function (next) {
     var article = this;

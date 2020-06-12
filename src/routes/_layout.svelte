@@ -1,3 +1,11 @@
+<script context="module">
+    export async function preload({ user }, page)
+    {
+        const res = await this.fetch(`/me`);
+        user = await res.json();
+    }
+</script>
+
 <script>
     import Footer from '../components/Footer.svelte';
     import Nav from '../components/Nav.svelte';
@@ -5,19 +13,8 @@
 
 <style>
     main {
-        max-width: 100vw;
+        max-width: 100%;
         box-sizing: border-box;
-    }
-    footer {
-        box-sizing: border-box;
-        text-align: center;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background: #fff;
-        box-shadow: 0 2px 5px #000;
-        padding: 1rem;
-        z-index: 1;
     }
 </style>
 
