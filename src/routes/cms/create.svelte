@@ -10,6 +10,7 @@
 
 <script>
     import { stores, goto } from '@sapper/app';
+    import { onMount } from 'svelte';
     import Editor from 'cl-editor/src/Editor.svelte';
 
     const { session } = stores();
@@ -18,6 +19,17 @@
     let title = '', image = '';
 
     let actions = [
+        {
+            name: 'save',
+            icon: '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAAs0lEQVRIie2WPQ6DMAxGXzJwqIrerN3pORi7cqWwtjegQymyUlMZCIlU8UleIvt7cv4BKuAG9MCQIJ7ABfBEapTkU5xkVC087mMTk4ICskqrkWOdhGntpwJ9OvNuxtgtAMU1mt81F+iRC/S9BfdScVBtrHciAM6/Epds59UqPnW7KMUdp0nee0O8RtbzY9Xk/X9rdIAOUBlQn4ETPNCKAevzYJF8Mlp4f4ca9G/X1gijd/UCDStihJWAousAAAAASUVORK5CYII=" height="16">',
+            title: 'Save',
+            result: function save() {
+                window.localStorage['title'] = title;
+                window.localStorage['image'] = image;
+                window.localStorage['html'] = editor.getHtml(true);
+                alert('Successfully saved draft to browser local storage');
+            }
+        },
         'viewHtml', 'undo', 'redo', 'b', 'i', 'u', 'strike', 'sup', 'sub', 'h1', 'h2', 'p', 'blockquote',
         'ol', 'ul', 'hr', 'left', 'right', 'center', 'justify', 'a', 'image', 'forecolor', 'backcolor', 'removeFormat',
         {
@@ -35,8 +47,14 @@
                     ' verified likes=1488 replies=6969 handle="realDonaldTrump"' +
                     ' avatar="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg" />');
             }
-        }
+        },
     ];
+
+    onMount(function load() {
+        title = window.localStorage['title'] || '';
+        image = window.localStorage['image'] || '';
+        editor.setHtml(window.localStorage['html'] || '', false);
+    });
 
     async function submit()
     {
