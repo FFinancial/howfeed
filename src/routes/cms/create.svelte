@@ -70,7 +70,7 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ html, image, title })
+            body: JSON.stringify({ html, image, title, category })
         });
         const json = await res.json();
         goto(`/a/${json.slug}`);
@@ -89,6 +89,7 @@
                 body: JSON.stringify({ name })
             });
             categories = await res.json();
+            category = categories.filter(c => c.name === name)[0].slug;
         }
     }
 </script>

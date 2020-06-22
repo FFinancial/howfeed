@@ -80,10 +80,14 @@ figure.article-image {
     align-self: center;
     justify-content: center;
     width: 33.33%;
+    margin: 0;
 }
 figure.article-image img {
     height: 6rem;
     width: auto;
+    object-fit: contain;
+    max-width: 100%;
+    margin: 1rem;
 }
 div.article-meta {
     margin: 1rem;
@@ -95,13 +99,46 @@ div.article-meta {
 }
 .article-title {
     font-size: 2rem;
+    margin: 0 auto;
 }
 .article-date {
     font-size: 1rem;
+    margin: 0 auto;
 }
 
 .content {
     background: #fff;
     margin: 8rem 0;
     padding: 2rem;
+}
+
+div.background {
+    background: url('/cityscape.jpg') no-repeat center;
+    background-size: cover;
+    position: fixed;
+    height: 24rem;
+    width: 100%;
+    z-index: 0;
+    filter: blur(5px);
+}
+
+div.article-list {
+    box-shadow: 0 0 5px #000;
+}
+div.article-meta {
+    font-weight: bold;
+}
+
+div.floaty {
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+    position: absolute;
+    z-index: 1;
+    margin: 0 auto;
+    width: 100%;
+}
+@media (min-width: 800px) {
+    div.floaty {
+        padding-top: 5rem !important;
+    }
 }

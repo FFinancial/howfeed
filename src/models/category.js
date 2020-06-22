@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 const CategorySchema = new Schema({
     name: { type: String, required: true, index: { unique: true } },
-    slug: { type: String, required: true, index: { unique: true } }
+    slug: { type: String, index: { unique: true } }
 });
 
 

@@ -257,10 +257,10 @@ express()
                 }
                 const cat = await new Category({ name });
                 await cat.save();
+                const categories = await Category.find();
                 res.writeHead(200, {
                     'Content-Type': 'application/json'
                 });
-                const categories = await Category.find();
                 res.end(JSON.stringify(categories));
             } catch (err) {
                 res.writeHead(500, {

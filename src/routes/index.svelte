@@ -2,7 +2,7 @@
     export async function preload()
     {
         const res = await this.fetch(`/c/all.json`);
-        const articles = await res.json();
+        const { articles } = await res.json();
         return { articles };
     }
 </script>
@@ -19,22 +19,7 @@
     h1, h2, p {
         margin: 0 auto;
     }
-    h1 {
-        font-size: 3rem;
-        text-transform: uppercase;
-    }
-    figure {
-        margin: 0;
-    }
-    img {
-        object-fit: contain;
-        max-width: 100%;
-        margin: 1rem;
-    }
     @media (min-width: 800px) {
-        div.homepage {
-            padding-top: 5rem !important;
-        }
         h1.welcome {
             font-size: 8rem !important;
         }
@@ -50,42 +35,19 @@
             font-size: 3.5rem !important;
         }
     }
-    div.background {
-        background: url('/cityscape.jpg') no-repeat center;
-        background-size: cover;
-        position: fixed;
-        height: 24rem;
-        width: 100%;
-        z-index: 0;
-        filter: blur(5px);
-    }
-    div.homepage {
-        padding-top: 8rem;
-        padding-bottom: 4rem;
-        position: absolute;
-        z-index: 1;
-        margin: 0 auto;
-        width: 100%;
-    }
     h1.welcome, h2.desc {
         color: whitesmoke;
     }
     h1.welcome {
         margin-top: 1rem;
         font-size: 3.75rem;
-    }
-    h2 {
+        font-size: 3rem;
         text-transform: uppercase;
     }
     h2.desc {
         margin-bottom: 1rem;
         font-size: 1.5rem;
-    }
-    div.article-list {
-        box-shadow: 0 0 5px #000;
-    }
-    div.article-meta {
-        font-weight: bold;
+        text-transform: uppercase;
     }
 </style>
 
@@ -94,7 +56,7 @@
 </svelte:head>
 
 <div class="background"></div>
-<div class="homepage">
+<div class="floaty">
     <h1 class="welcome">Welcome</h1>
     <h2 class="desc">Find an Article</h2>
     <div class="article-list">
@@ -110,7 +72,7 @@
         </a>
     {:else}
         <p>No articles have been published yet :(</p>
-        <p>Come back soon!</p>
+        <p>Chcek back soon!</p>
     {/each}
     </div>
 </div>

@@ -1,0 +1,70 @@
+<script context="module">
+    export async function preload({ params, query }) {
+        if (params.slug === 'all') {
+            this.redirect(302, '/');
+        }
+        const res = await this.fetch(`c/${params.slug}.json`);
+        const data = await res.json();
+
+        if (res.status === 200) {
+            return {
+                articles: data.articles,
+                category: data.category
+            };
+        } else {
+            this.error(res.status, data.message);
+        }
+    }
+</script>
+
+<svelte:head>
+    <title>{category.name} Articles | HOWFEED.BIZ</title>
+</svelte:head>
+
+<style>
+    h1 {
+        margin: 0 auto;
+        color: whitesmoke;
+        margin-top: 1rem;
+        font-size: 2rem;
+        font-size: 3rem;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    @media (min-width: 800px) {
+        h1 {
+            font-size: 4rem !important;
+        }
+    }
+    @media (min-width: 1280px) {
+        h1 {
+            font-size: 8rem !important;
+        }
+    }
+</style>
+
+<script>
+    export let articles;
+    export let category;
+</script>
+
+<div class="background"></div>
+<div class="floaty">
+    <h1>{category.name}</h1>
+    <div class="article-list">
+    {#each articles as {title, slug, image, created_at}}
+        <a rel="prefetch" href={`/a/${slug}`}>
+            <figure class="article-image">
+                <img src={image || '/logo.png'} alt={title}>
+            </figure>
+            <div class="article-meta">
+                <p class="article-title">{title}</p>
+                <p class="article-date">{new Date(created_at).toLocaleDateString()}</p>
+            </div>
+        </a>
+    {:else}
+        <p>No articles are in this category :(</p>
+        <p>Check back soon!</p>
+    {/each}
+    </div>
+</div>
