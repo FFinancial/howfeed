@@ -73,7 +73,11 @@
             body: JSON.stringify({ html, image, title, category })
         });
         const json = await res.json();
-        goto(`/a/${json.slug}`);
+        if (res.status === 200) {
+            goto(`/a/${json.slug}`);
+        } else {
+            alert(`Error ${res.status}: ${json.message}`);
+        }
     }
 
     async function addCategory()

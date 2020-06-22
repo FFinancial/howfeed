@@ -254,6 +254,7 @@ express()
                     res.end(JSON.stringify({
                         message: `You must supply a category name.`
                     }));
+                    return;
                 }
                 const cat = await new Category({ name });
                 await cat.save();
