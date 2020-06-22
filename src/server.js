@@ -205,16 +205,25 @@ express()
         isAuthor,
         async function(req, res, next) {
             try {
-                const { html, title, image } = req.body;
-                if (!title || !image || !html) {
+                const { html, title, image, category } = req.body;
+                if (!title || !image || !html || !category) {
                     res.writeHead(422, {
                         'Content-Type': 'application/json'
                     });
                     res.end(JSON.stringify({
-                        message: `You must supply an article title, image URL, and content.`
+                        message: `You must supply an article title, image URL, category, and content.`
                     }));
                 }
-                const article = await new Article({ html, title, image, author: req.user._id });
+                const cat = await Category.findOne({ name: category });
+                if (!cat) {
+                    res.writeHead(404, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `That category does not exist.`
+                    }));
+                }
+                const article = await new Article({ html, title, image, category: cat, author: req.user._id });
                 await article.save();
                 res.writeHead(200, {
                     'Content-Type': 'application/json'
@@ -288,7 +297,14 @@ express()
             'Content-Type': 'application/json'
         });
         res.end(JSON.stringify(articles));
+    })
 
+    .get('/c', async function (req, res, next) {
+        let categories = await Category.find();
+        res.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify(categories));
     })
 
     .get('/me', function(req, res, next) {

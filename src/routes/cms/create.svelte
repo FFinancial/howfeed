@@ -16,7 +16,7 @@
     const { session } = stores();
 
     let editor;
-    let title = '', image = '';
+    let title = '', image = '', category = '';
 
     let actions = [
         {
@@ -26,6 +26,7 @@
             result: function save() {
                 window.localStorage['title'] = title;
                 window.localStorage['image'] = image;
+                window.localStorage['category'] = category;
                 window.localStorage['html'] = editor.getHtml(true);
                 alert('Successfully saved draft to browser local storage');
             }
@@ -53,6 +54,7 @@
     onMount(function load() {
         title = window.localStorage['title'] || '';
         image = window.localStorage['image'] || '';
+        category = window.localStorage['category'] || '';
         editor.setHtml(window.localStorage['html'] || '', false);
     });
 
@@ -88,6 +90,15 @@
     <form method="POST" action="/cms/article">
         <p>Article Title: <input type="text" name="title" bind:value={title} required placeholder="How to Assassinate the Governor of California"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
+        <p>Article Category: <select>
+        {#await fetch('/c').then(r => r.json())}
+            Loading...
+        {:then categories}
+            {#each categories as category}
+                <option value={category}>{category}</option>
+            {/each}
+        {/await}
+        </select></p>
         <p>Article Header Image URL: <input type="text" name="image" bind:value={image} required placeholder="http:// ..."></p>
     </form>
     <Editor bind:this={editor} {actions} />
