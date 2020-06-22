@@ -39,7 +39,7 @@
             <p><a href="mailto:webmaster@femboyfashion.com.hk">webmaster@femboyfashion.com.hk</a></p>
         </div>
     </div>
-    <div style="max-width:100%;list-style:none; transition: none;overflow:hidden;width:500px;height:500px;">
-        <iframe style="height:100%;width:100%;border:0;" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=1198+S+Sixth+St&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
+    <div style="max-width:100%;margin:0 auto;width:700px;height:440px;">
+        <iframe width="700" height="440" src="https://maps.google.com/maps?width=700&amp;height=440&amp;hl=en&amp;q=1198%20Sixth%20St%2C%20San%20Jose%2C%20CA+(Title)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
     </div>
 </div>
