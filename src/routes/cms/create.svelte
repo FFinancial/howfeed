@@ -4,7 +4,9 @@
         if (!session.user || !session.user.author) {
             return this.redirect(302, '/cms');
         }
-        return { user: session.user };
+        const res = await this.fetch('/c.json');
+        const categories = await res.json();
+        return { user: session.user, categories };
     }
 </script>
 
@@ -17,6 +19,7 @@
 
     let editor;
     let title = '', image = '', category = '';
+    export let categories;
 
     let actions = [
         {
@@ -72,6 +75,22 @@
         const json = await res.json();
         goto(`/a/${json.slug}`);
     }
+
+    async function addCategory()
+    {
+        let name = prompt('Enter a category name');
+        if (name) {
+            const res = await fetch('/cms/category', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name })
+            });
+            categories = await res.json();
+        }
+    }
 </script>
 
 <style>
@@ -90,15 +109,15 @@
     <form method="POST" action="/cms/article">
         <p>Article Title: <input type="text" name="title" bind:value={title} required placeholder="How to Assassinate the Governor of California"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
-        <p>Article Category: <select>
-        {#await fetch('/c').then(r => r.json())}
-            Loading...
-        {:then categories}
-            {#each categories as category}
-                <option value={category}>{category}</option>
+        <p>Article Category:
+        {#if categories.length}
+            <select bind:value={category}>
+            {#each categories as { name, slug }}
+                <option value={slug}>{name}</option>
             {/each}
-        {/await}
-        </select></p>
+            </select>
+        {/if}
+        <button on:click|preventDefault={addCategory}>+</button></p>
         <p>Article Header Image URL: <input type="text" name="image" bind:value={image} required placeholder="http:// ..."></p>
     </form>
     <Editor bind:this={editor} {actions} />

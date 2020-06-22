@@ -116,7 +116,7 @@
         padding: 1rem;
         margin-bottom: 0.5rem;
     }
-    
+
     p.comment-meta {
         margin: 0;
     }
@@ -138,6 +138,7 @@
         <h1 class="article-title">{article.title}</h1>
         <blockquote>
             <p>Author: <strong>{article.author.realname}</strong></p>
+            <p>Category: <strong><a href={`/c/${article.category.slug}`}>{article.category.name}</a></strong></p>
             <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
             <p>Views: <strong>{article.views}</strong></p>
         </blockquote>

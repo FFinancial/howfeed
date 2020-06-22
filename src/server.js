@@ -214,7 +214,7 @@ express()
                         message: `You must supply an article title, image URL, category, and content.`
                     }));
                 }
-                const cat = await Category.findOne({ name: category });
+                const cat = await Category.findOne({ slug: category });
                 if (!cat) {
                     res.writeHead(404, {
                         'Content-Type': 'application/json'
@@ -260,9 +260,8 @@ express()
                 res.writeHead(200, {
                     'Content-Type': 'application/json'
                 });
-                res.end(JSON.stringify({
-                    category: cat.name
-                }));
+                const categories = await Category.find();
+                res.end(JSON.stringify(categories));
             } catch (err) {
                 res.writeHead(500, {
                     'Content-Type': 'application/json'
@@ -273,39 +272,6 @@ express()
             }
         }
     )
-
-    .get('/a/:category', async function (req, res, next) {
-        let { category } = req.params;
-        let articles;
-        if (category === 'all') {
-            articles = await Article.find().sort({ created_at: 'desc' });
-        } else {
-            let cat = await Category.findOne({ name: category });
-            if (!cat) {
-                res.writeHead(404, {
-                    'Content-Type': 'application/json'
-                });
-                res.end(JSON.stringify({
-                    message: `That category does not exist.`
-                }));
-                return;
-            } else {
-                articles = await Article.find({ category: cat.id }).sort({ created_at: 'desc' });
-            }
-        }
-        res.writeHead(200, {
-            'Content-Type': 'application/json'
-        });
-        res.end(JSON.stringify(articles));
-    })
-
-    .get('/c', async function (req, res, next) {
-        let categories = await Category.find();
-        res.writeHead(200, {
-            'Content-Type': 'application/json'
-        });
-        res.end(JSON.stringify(categories));
-    })
 
     .get('/me', function(req, res, next) {
         if (req.user) {

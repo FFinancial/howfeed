@@ -4,7 +4,7 @@
         if (!session.user || !session.user.author) {
             return this.redirect(302, '/cms');
         }
-        const res = await this.fetch(`/a/all`);
+        const res = await this.fetch(`/c/all.json`);
         const articles = await res.json();
         return { articles, user: session.user };
     }
@@ -24,7 +24,7 @@
             await fetch(`/a/${article.slug}.json`, {
                 method: 'DELETE'
             });
-            const res = await fetch(`/a/all`);
+            const res = await fetch(`/c/all.json`);
             articles = await res.json();
         }
     }

@@ -7,6 +7,8 @@ export async function get(req, res, next) {
     const article = await Article.findOne({ slug }).populate({
         path: 'author',
         select: 'realname'
+    }).populate({
+        path: 'category'
     });
 
     if (article) {

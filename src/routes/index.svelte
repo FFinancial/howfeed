@@ -1,7 +1,7 @@
 <script context="module">
     export async function preload()
     {
-        const res = await this.fetch(`/a/all`);
+        const res = await this.fetch(`/c/all.json`);
         const articles = await res.json();
         return { articles };
     }
@@ -84,7 +84,7 @@
     div.article-list {
         box-shadow: 0 0 5px #000;
     }
-    div.article-meta {    
+    div.article-meta {
         font-weight: bold;
     }
 </style>
