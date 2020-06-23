@@ -45,6 +45,7 @@
         height: 3rem;
         max-width: 100%;
         object-fit: contain;
+        margin-right: 3rem;
     }
     @media (min-width: 800px) {
         div.items {
@@ -56,9 +57,12 @@
             margin-left: 4rem;
         }
     }
+    div.search {
+        width: 100%;
+    }
     input.search {
+        width: 100%;
         height: 1.5rem;
-        width: 50%;
         font-size: 1rem;
         margin: 0 auto;
         text-align: center;

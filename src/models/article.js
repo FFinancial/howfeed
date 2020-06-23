@@ -14,7 +14,11 @@ const ArticleSchema = new Schema({
     html: { type: String, required: true },
     comments: [{
         content: { type: String, required: true },
-        author: { type: String, required: true },
+        author: { type: String },
+        author_user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
         created_at: { type: Date, default: Date.now },
         votes: { type: Number, default: 0 }
     }],

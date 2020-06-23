@@ -14,6 +14,8 @@
 </script>
 
 <script>
+    import { stores } from '@sapper/app';
+    const { session } = stores();
     export let article;
 
     let author = '', content = '';
@@ -110,6 +112,10 @@
         font-weight: bold;
     }
 
+    span.comment-verified {
+        font-style: italic;
+    }
+
     div.comment {
         background-color: rgb(150, 200, 234);
         border: 1px solid #508FC3;
@@ -123,6 +129,10 @@
 
     div.article-content {
         margin-bottom: 2rem;
+    }
+
+    div.comment-content {
+        word-break: break-word;
     }
 </style>
 
@@ -152,9 +162,13 @@
     {#each article.comments as comment}
         <div class="comment">
             <p class="comment-meta">
+            {#if comment.author_user}
+                <span class="comment-username">{comment.author_user.realname}</span> <span class="comment-verified">(verified)</span> - {new Date(comment.created_at).toLocaleString()}
+            {:else}
                 <span class="comment-username">{comment.author}</span> - {new Date(comment.created_at).toLocaleString()}
+            {/if}
             </p>
-            <div>{comment.content}</div>
+            <div class="comment-content">{comment.content}</div>
         </div>
     {:else}
         <p>No comments.</p>
@@ -162,7 +176,13 @@
     </div>
     <h3>Add a Comment</h3>
     <form method="POST" action={`/a/${article.slug}/comment`}>
-        <p>Name: <input type="text" bind:value={author} name="author" maxlength="100" placeholder="Anonymous"></p>
+        <p>Name:
+        {#if $session.user}
+            <input type="text" disabled value={$session.user.realname}>
+        {:else}
+            <input type="text" bind:value={author} name="author" maxlength="100" placeholder="Anonymous">
+        {/if}
+        </p>
         <p><textarea name="content" bind:value={content} maxlength="5000"></textarea></p>
         <p><button type="submit" on:click|preventDefault={postComment}>Submit</button></p>
     </form>

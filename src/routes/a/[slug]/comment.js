@@ -2,7 +2,10 @@ import Article from '../../../models/article.js';
 
 export async function post(req, res) {
     const { slug } = req.params;
-    const article = await Article.findOne({ slug });
+    const article = await Article.findOne({ slug }).populate({
+        path: 'comments.author_user',
+        select: 'realname'
+    });
 
     if (article) {
         let { author, content } = req.body;
@@ -34,7 +37,11 @@ export async function post(req, res) {
             }));
             return;
         }
-        article.comments.push({ author, content });
+        if (req.user) {
+            article.comments.push({ author_user: req.user._id, content });
+        } else {
+            article.comments.push({ author, content });
+        }
         article.save();
         res.writeHead(200, {
             'Content-Type': 'application/json'

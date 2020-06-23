@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import sessionFileStore from 'session-file-store';
+import fileUpload from 'express-fileupload';
+import helmet from 'helmet';
 import Article from './models/article.js';
 import Category from './models/category.js';
 import User from './models/user.js';
@@ -77,8 +79,10 @@ const isAuthor = function(req, res, next) {
 
 
 express()
+    .use(helmet())
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
+    .use(fileUpload())
     .use(session({
         secret: SESSION_SECRET,
         resave: false,

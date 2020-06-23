@@ -6,7 +6,10 @@ export async function get(req, res)
     let { slug } = req.params;
     let articles, cat;
     if (slug === 'all') {
-        articles = await Article.find().sort({ created_at: 'desc' }).populate({ path: 'category' });
+        articles = await Article.find()
+                                .sort({ created_at: 'desc' })
+                                .populate({ path: 'category' })
+                                .populate({ path: 'author', select: 'realname' });
     } else {
         cat = await Category.findOne({ slug });
         if (!cat) {
@@ -20,7 +23,8 @@ export async function get(req, res)
         } else {
             articles = await Article.find({ category: cat.id })
                                     .sort({ created_at: 'desc' })
-                                    .populate({ path: 'category' });
+                                    .populate({ path: 'category' })
+                                    .populate({ path: 'author', select: 'realname' });
         }
     }
     res.writeHead(200, {

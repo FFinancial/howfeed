@@ -5,8 +5,12 @@
             return this.redirect(302, '/cms');
         }
         const res = await this.fetch(`/c/all.json`);
-        const articles = await res.json();
-        return { articles, user: session.user };
+        const json = await res.json();
+        if (res.status === 200) {
+            return { articles: json.articles, user: session.user };
+        } else {
+            this.error(res.status, json.message);
+        }
     }
 </script>
 
@@ -16,7 +20,7 @@
 
 <script>
     import { goto } from '@sapper/app';
-    export let articles;
+    export let articles = [];
 
     async function del(article)
     {
