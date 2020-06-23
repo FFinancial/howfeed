@@ -83,7 +83,7 @@
     async function addCategory()
     {
         let name = prompt('Enter a category name');
-        if (name) {
+        if (name !== null) {
             const res = await fetch('/cms/category', {
                 method: 'POST',
                 headers: {
@@ -92,8 +92,13 @@
                 },
                 body: JSON.stringify({ name })
             });
-            categories = await res.json();
-            category = categories.filter(c => c.name === name)[0].slug;
+            const json = await res.json();
+            if (res.status === 200) {
+                categories = json;
+                category = categories.filter(c => c.name === name)[0].slug;
+            } else {
+                alert(`Error ${res.status}: ${json.message}`);
+            }
         }
     }
 </script>

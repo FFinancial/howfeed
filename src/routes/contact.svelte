@@ -36,7 +36,7 @@
             <h3>James N. Shiffer</h3>
             <p>Webmaster</p>
             <p>FemboyFinancial Holdings Co., Ltd. (USA LLC)</p>
-            <p><a href="mailto:webmaster@femboyfashion.com.hk">webmaster@femboyfashion.com.hk</a></p>
+            <p><a href="mailto:webmaster@howfeed.biz">webmaster@howfeed.biz</a></p>
         </div>
     </div>
     <div style="max-width:100%;margin:0 auto;width:700px;height:440px;">

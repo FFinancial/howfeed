@@ -1,6 +1,15 @@
 <script>
-    import { stores } from '@sapper/app';
+    import { stores, goto } from '@sapper/app';
     const { session } = stores();
+
+    let query = '';
+
+    function search(e)
+    {
+        if (e.keyCode === 13) {
+            goto(`/search/${encodeURIComponent(query)}`);
+        }
+    }
 </script>
 
 <style>
@@ -23,11 +32,10 @@
         padding: 0 1.5rem 0.25rem;
         align-items: start;
     }
-    div.filler {
+    div.search {
         flex: 1 0 0;
-    }
-    div.items div {
-        display: block;
+        margin: auto 0;
+        display: flex;
     }
     div.link a {
         text-decoration: none;
@@ -48,12 +56,21 @@
             margin-left: 4rem;
         }
     }
+    input.search {
+        height: 1.5rem;
+        width: 50%;
+        font-size: 1rem;
+        margin: 0 auto;
+        text-align: center;
+    }
 </style>
 
 <nav>
     <div class="items">
         <div><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
-        <div class="filler"></div>
+        <div class="search">
+            <input class="search" on:keyup={search} bind:value={query} type="text" placeholder="Search">
+        </div>
         {#if !$session.user}
             <div class="link"><a href="/contact">Contact Us</a></div>
         {:else}

@@ -115,6 +115,7 @@ div.article-meta {
 div.background {
     background: url('/cityscape.jpg') no-repeat center;
     background-size: cover;
+    background-attachment: fixed;
     position: fixed;
     height: 24rem;
     width: 100%;

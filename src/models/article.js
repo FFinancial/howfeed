@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoose_fuzzy_searching from 'mongoose-fuzzy-searching';
 
 const { Schema } = mongoose;
 const ArticleSchema = new Schema({
@@ -28,13 +29,18 @@ const ArticleSchema = new Schema({
 
 ArticleSchema.methods.genSlug = title => title.toLowerCase().replace(/\W+/g, '-');
 
-ArticleSchema.pre('save', function (next) {
-    var article = this;
-    // only gen the slug if title has been modified (or is new)
-    if (!article.isModified('title')) return next();
+ArticleSchema.plugin(mongoose_fuzzy_searching, {
+    fields: ['html', 'title'],
+    middlewares: {
+        preSave: function () {
+            var article = this;
+            // only gen the slug if title has been modified (or is new)
+            if (!article.isModified('title'))
+                return;
 
-    article.slug = article.genSlug(article.title);
-    next();
+            article.slug = article.genSlug(article.title);
+        }
+    }
 });
 
 export default mongoose.model('Article', ArticleSchema);
