@@ -40,18 +40,29 @@
     }
     div.link a {
         text-decoration: none;
-        font-size: 1.5rem;
+        font-size: 2rem;
+    }
+    div.wordmark {
+        flex: 1 0 64px;
     }
     img.wordmark {
         height: 3rem;
         max-width: 100%;
         object-fit: contain;
-        margin-right: 3rem;
     }
     @media (min-width: 800px) {
         div.items {
             flex-direction: row;
         }
+        div.link a {
+            font-size: 1.5rem !important;
+            margin-left: 2rem;
+        }
+        div.search {
+            margin-left: 1rem;
+        }
+    }
+    @media (min-width: 1280px) {
         div.link a {
             font-size: 2rem !important;
             margin-left: 4rem;
@@ -59,6 +70,7 @@
     }
     div.search {
         width: 100%;
+        flex: 1 0 64px;
     }
     input.search {
         width: 100%;
@@ -79,7 +91,7 @@
 
 <nav>
     <div class="items">
-        <div><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
+        <div class="wordmark"><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
         <div class="search">
             <input class="search" on:keyup={search} bind:value={query} type="text" placeholder="Search">
         </div>
