@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 import sessionFileStore from 'session-file-store';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import Article from './models/article.js';
@@ -54,6 +55,32 @@ passport.use(new Strategy((username, password, done) => {
         });
     });
 }));
+
+const loginAttemptRateLimiter = new RateLimiterMemory({
+    points: 5,
+    duration: 3600,
+    blockDuration: 60
+});
+
+const registerRateLimiter = new RateLimiterMemory({
+    points: 1,
+    duration: 60,
+    blockDuration: 60
+});
+
+const rateLimiterMiddleware = rl => async function (req, res, next) {
+    try {
+        await rl.consume(req.ip);
+        next();
+    } catch (err) {
+        res.writeHead(429, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+            message: 'Too Many Requests'
+        }));
+    }
+};
 
 const isAuthor = function(req, res, next) {
     if (req.user) {
@@ -149,6 +176,17 @@ express()
                 return false;
             }
             try {
+                await registerRateLimiter.consume();
+            } catch (err) {
+                res.writeHead(429, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `Too Many Requests`
+                }));
+                return false;
+            }
+            try {
                 const user = await User.findOne({ username: req.body.username });
                 if (user) {
                     res.writeHead(401, {
@@ -181,6 +219,7 @@ express()
     )
 
     .post('/cms/login',
+        rateLimiterMiddleware(loginAttemptRateLimiter),
         passport.authenticate('local', { failWithError: true }),
         function(req, res, next) {
             // handle success
