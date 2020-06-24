@@ -31,46 +31,49 @@
         padding: 0;
         display: flex;
         flex-direction: column;
+        justify-content: space-evenly;
         text-transform: uppercase;
         align-items: center;
-    }
-    div.search {
-        flex: 1 0 0;
-        display: flex;
     }
     div.link a {
         text-decoration: none;
         font-size: 2rem;
     }
     div.wordmark {
-        flex: 1 0 64px;
+        width: 17.5rem;
     }
     img.wordmark {
-        height: 3rem;
+        vertical-align: middle;
         max-width: 100%;
-        object-fit: contain;
     }
     @media (min-width: 800px) {
+        div.wordmark {
+            width: 15rem !important;
+        }
         div.items {
             flex-direction: row;
         }
         div.link a {
             font-size: 1.5rem !important;
-            margin-left: 2rem;
         }
-        div.search {
-            margin-left: 1rem;
+        div.items > div {
+            margin: 0 1rem;
         }
     }
     @media (min-width: 1280px) {
+        div.wordmark {
+            width: 17.5rem !important;
+        }
         div.link a {
             font-size: 2rem !important;
-            margin-left: 4rem;
+        }
+        div.items > div {
+            margin: 0 2rem !important;
         }
     }
     div.search {
-        width: 100%;
-        flex: 1 0 64px;
+        flex: 1 1 0;
+        min-width: 8rem;
     }
     input.search {
         width: 100%;
