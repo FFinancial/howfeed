@@ -17,7 +17,7 @@
 
     const { session } = stores();
 
-    let editor, form;
+    let editor, form, uploadForm;
     let title = '', category = '';
     export let categories;
 
@@ -100,6 +100,34 @@
             }
         }
     }
+
+    async function upload()
+    {
+        let fd = new FormData(uploadForm);
+        const res = await fetch(`/cms/upload`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: fd
+        });
+        const json = await res.json();
+        if (res.status === 200) {
+            const ans = prompt('(Optional) Enter the dimensions to resize this image to (e.g. "350x150")');
+            if (ans) {
+                const dim = ans.split('x');
+                if (Number.isInteger(+dim[0]) && Number.isInteger(+dim[1])) {
+                    editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" width="${dim[0]}" height="${dim[1]}">`, false);
+                } else {
+                    editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
+                }
+            } else {
+                editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
+            }
+        } else {
+            alert(`Error ${res.status}: ${json.message}`);
+        }
+    }
 </script>
 
 <style>
@@ -127,8 +155,13 @@
             </select>
         {/if}
         <button on:click|preventDefault={addCategory}>+</button></p>
-        <p>Article Header Image: <input type="file" name="image" accept="image/*" required placeholder="http:// ..."></p>
+        <p>Article Header Image: <input type="file" name="image" accept="image/*" required></p>
     </form>
     <Editor bind:this={editor} {actions} />
+    <form enctype="multipart/form-data" action="/cms/upload" method="POST" bind:this={uploadForm}>
+        <p>Add Image to Article:
+            <input type="file" name="upload" accept="image/*"> <button on:click|preventDefault={upload}>Upload</button>
+        </p>
+    </form>
     <button on:click={submit}>Submit</button>
 </div>

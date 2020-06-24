@@ -312,6 +312,57 @@ express()
         }
     )
 
+    .post('/cms/upload',
+        isAuthor,
+        async function(req, res, next) {
+            try {
+                const { upload } = req.files;
+                if (!upload) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `You must supply a file.`
+                    }));
+                    return false;
+                }
+                if (!/^image\//.test(upload.mimetype)) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `Invalid MIME type for the uploaded image.`
+                    }));
+                    return false;
+                }
+                if (upload.truncated) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `Received truncated image file. Try again with a smaller file.`
+                    }));
+                    return false;
+                }
+                const ext = upload.name.match(/(\.[^.]+)$/)[0];
+                const filename = crypto.randomBytes(20).toString('hex') + ext;
+                const url = `/a/${filename}`;
+                await upload.mv('./static' + url);
+                res.writeHead(200, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({ url }));
+            } catch (err) {
+                res.writeHead(500, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: `Failed to upload image: ${err}`
+                }));
+            }
+        }
+    )
+
     .post('/cms/category',
         isAuthor,
         async function(req, res, next) {
