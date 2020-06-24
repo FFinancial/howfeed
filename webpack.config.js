@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const config = require('sapper/config/webpack.js');
 const pkg = require('./package.json');
@@ -19,18 +20,40 @@ module.exports = {
 		resolve: { alias, extensions, mainFields },
 		module: {
 			rules: [
+                {
+                    test: /\.(js|mjs|html|svelte)$/,
+                    exclude: /(node_modules\/@babel)/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                ['@babel/preset-env', {
+                                    targets: '> 0.25%, ie >= 6, not dead'
+                                }]
+                            ],
+                            plugins: [
+                                '@babel/plugin-syntax-dynamic-import',
+					            '@babel/plugin-proposal-object-rest-spread',
+					            ['@babel/plugin-transform-runtime', {
+                                    regenerator: true
+                                }],
+                            ],
+                            sourceType: 'unambiguous'
+                        }
+                    }
+                },
 				{
 					test: /\.(svelte|html)$/,
 					use: {
 						loader: 'svelte-loader',
 						options: {
 							dev,
-							hydratable: true,
+                            hydratable: true,
                             hotReload: true,
                             onwarn
 						}
 					}
-				}
+                },
 			]
 		},
 		mode,
@@ -42,7 +65,11 @@ module.exports = {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 		].filter(Boolean),
-		devtool: dev && 'inline-source-map',
+        devtool: dev && 'inline-source-map',
+        optimization: {
+            minimize: true,
+            minimizer: [new TerserPlugin()],
+        },
 	},
 
 	server: {
