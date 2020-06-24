@@ -15,13 +15,16 @@
 <style>
     nav {
         font-weight: bold;
-        padding: 1rem 0 0 0;
-        position: fixed;
-        width: 100%;
+        position: absolute;
+        padding: 0.5rem;
+        margin: 0 auto;
+        width: 85%;
         z-index: 100;
-        background-color: #fff;
-        top: 0;
-        box-shadow: 0 -2px 5px #000;
+        background-color: white;
+        top: 1rem;
+        left: 0;
+        right: 0;
+        box-shadow: 0 2px 0.5rem black;
     }
     div.items {
         margin: 0;
@@ -29,12 +32,10 @@
         display: flex;
         flex-direction: column;
         text-transform: uppercase;
-        padding: 0 1.5rem 0.25rem;
-        align-items: start;
+        align-items: center;
     }
     div.search {
         flex: 1 0 0;
-        margin: auto 0;
         display: flex;
     }
     div.link a {
@@ -50,7 +51,6 @@
     @media (min-width: 800px) {
         div.items {
             flex-direction: row;
-            align-items: end;
         }
         div.link a {
             font-size: 2rem !important;
@@ -62,10 +62,18 @@
     }
     input.search {
         width: 100%;
-        height: 1.5rem;
-        font-size: 1rem;
+        height: 2.75rem;
+        font-size: 2rem;
         margin: 0 auto;
-        text-align: center;
+        border: 0.25rem solid black;
+    }
+    input.search:focus::placeholder {
+        opacity: 0;
+    }
+    input.search::placeholder {
+        opacity: 1;
+        font-weight: bold;
+        font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     }
 </style>
 

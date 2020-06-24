@@ -55,8 +55,14 @@ export async function del(req, res, next) {
     const article = await Article.findOneAndDelete({ slug });
 
     if (article) {
-        res.writeHead(204);
-        res.end();
+        const articles = await Article.find()
+                                    .sort({ created_at: 'desc' })
+                                    .populate({ path: 'category' })
+                                    .populate({ path: 'author', select: 'realname' });
+        res.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({ category: 'all', articles }));
     } else {
         res.writeHead(404, {
             'Content-Type': 'application/json'

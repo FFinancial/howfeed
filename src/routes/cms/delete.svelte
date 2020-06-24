@@ -25,11 +25,15 @@
     async function del(article)
     {
         if (confirm(`Are you sure you want to delete "${article.title}"?`)) {
-            await fetch(`/a/${article.slug}.json`, {
+            const res = await fetch(`/a/${article.slug}.json`, {
                 method: 'DELETE'
             });
-            const res = await fetch(`/c/all.json`);
-            articles = await res.json();
+            const json = await res.json();
+            if (res.status === 200) {
+                articles = json.articles;
+            } else {
+                alert(`Error ${res.status}: ${json.message}`);
+            }
         }
     }
 </script>

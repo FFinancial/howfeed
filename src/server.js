@@ -11,6 +11,7 @@ import sessionFileStore from 'session-file-store';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
+import crypto from 'crypto';
 import Article from './models/article.js';
 import Category from './models/category.js';
 import User from './models/user.js';
@@ -109,7 +110,9 @@ express()
     .use(helmet())
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
-    .use(fileUpload())
+    .use(fileUpload({
+        limits: { fileSize: 16000000 }
+    }))
     .use(session({
         secret: SESSION_SECRET,
         resave: false,
@@ -248,14 +251,34 @@ express()
         isAuthor,
         async function(req, res, next) {
             try {
-                const { html, title, image, category } = req.body;
+                const { html, title, category } = req.body;
+                const { image } = req.files;
                 if (!title || !image || !html || !category) {
                     res.writeHead(422, {
                         'Content-Type': 'application/json'
                     });
                     res.end(JSON.stringify({
-                        message: `You must supply an article title, image URL, category, and content.`
+                        message: `You must supply an article title, header image file, category, and content.`
                     }));
+                    return false;
+                }
+                if (!/^image\//.test(image.mimetype)) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `Invalid MIME type for the header image file.`
+                    }));
+                    return false;
+                }
+                if (image.truncated) {
+                    res.writeHead(422, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        message: `Received truncated image file. Try again with a smaller file.`
+                    }));
+                    return false;
                 }
                 const cat = await Category.findOne({ slug: category });
                 if (!cat) {
@@ -265,8 +288,12 @@ express()
                     res.end(JSON.stringify({
                         message: `That category does not exist.`
                     }));
+                    return false;
                 }
-                const article = await new Article({ html, title, image, category: cat, author: req.user._id });
+                const ext = image.name.match(/(\.[^.]+)$/)[0];
+                const filename = crypto.randomBytes(20).toString('hex') + ext;
+                await image.mv('./static/a/' + filename);
+                const article = await new Article({ html, title, image: filename, category: cat, author: req.user._id });
                 await article.save();
                 res.writeHead(200, {
                     'Content-Type': 'application/json'

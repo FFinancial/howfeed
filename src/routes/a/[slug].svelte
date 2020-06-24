@@ -142,7 +142,7 @@
 
 <div class="content">
     <figure class="article-image">
-        <img alt={article.title} src={article.image}>
+        <img alt={article.title} src={`/a/${article.image}`}>
     </figure>
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>

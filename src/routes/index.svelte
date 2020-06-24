@@ -35,11 +35,8 @@
             font-size: 3.5rem !important;
         }
     }
-    h1.welcome, h2.desc {
-        color: whitesmoke;
-    }
     h1.welcome {
-        margin-top: 1rem;
+        margin: 1rem 0;
         font-size: 3.75rem;
         font-size: 3rem;
         text-transform: uppercase;
@@ -58,12 +55,11 @@
 <div class="background"></div>
 <div class="floaty">
     <h1 class="welcome">Welcome</h1>
-    <h2 class="desc">Find an Article</h2>
     <div class="article-list">
     {#each articles as {title, slug, image, created_at}}
         <a rel="prefetch" href={`/a/${slug}`}>
             <figure class="article-image">
-                <img src={image || '/logo.png'} alt={title}>
+                <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
             </figure>
             <div class="article-meta">
                 <p class="article-title">{title}</p>

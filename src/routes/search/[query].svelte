@@ -20,7 +20,6 @@
 <style>
     h1 {
         margin: 0 auto;
-        color: whitesmoke;
         margin-top: 1rem;
         font-size: 2rem;
         font-size: 3rem;
@@ -41,7 +40,7 @@
     {#each results as {title, slug, image, created_at}}
         <a rel="prefetch" href={`/a/${slug}`}>
             <figure class="article-image">
-                <img src={image || '/logo.png'} alt={title}>
+                <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
             </figure>
             <div class="article-meta">
                 <p class="article-title">{title}</p>

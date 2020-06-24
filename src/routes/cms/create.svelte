@@ -17,8 +17,8 @@
 
     const { session } = stores();
 
-    let editor;
-    let title = '', image = '', category = '';
+    let editor, form;
+    let title = '', category = '';
     export let categories;
 
     let actions = [
@@ -28,7 +28,6 @@
             title: 'Save',
             result: function save() {
                 window.localStorage['title'] = title;
-                window.localStorage['image'] = image;
                 window.localStorage['category'] = category;
                 window.localStorage['html'] = editor.getHtml(true);
                 alert('Successfully saved draft to browser local storage');
@@ -56,7 +55,6 @@
 
     onMount(function load() {
         title = window.localStorage['title'] || '';
-        image = window.localStorage['image'] || '';
         category = window.localStorage['category'] || '';
         editor.setHtml(window.localStorage['html'] || '', false);
     });
@@ -64,13 +62,14 @@
     async function submit()
     {
         let html = editor.getHtml(true);
+        let fd = new FormData(form);
+        fd.append('html', html);
         const res = await fetch(`/cms/article`, {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Accept': 'application/json'
             },
-            body: JSON.stringify({ html, image, title, category })
+            body: fd
         });
         const json = await res.json();
         if (res.status === 200) {
@@ -116,19 +115,19 @@
 <div class="content">
     <a href="/cms">&lt; Back to Dashboard</a>
     <h1>HowFeed Publisher</h1>
-    <form method="POST" action="/cms/article">
+    <form enctype="multipart/form-data" method="POST" action="/cms/article" bind:this={form}>
         <p>Article Title: <input type="text" name="title" bind:value={title} required placeholder="How to Assassinate the Governor of California"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
         <p>Article Category:
         {#if categories.length}
-            <select bind:value={category}>
+            <select name="category" bind:value={category}>
             {#each categories as { name, slug }}
                 <option value={slug}>{name}</option>
             {/each}
             </select>
         {/if}
         <button on:click|preventDefault={addCategory}>+</button></p>
-        <p>Article Header Image URL: <input type="text" name="image" bind:value={image} required placeholder="http:// ..."></p>
+        <p>Article Header Image: <input type="file" name="image" accept="image/*" required placeholder="http:// ..."></p>
     </form>
     <Editor bind:this={editor} {actions} />
     <button on:click={submit}>Submit</button>
