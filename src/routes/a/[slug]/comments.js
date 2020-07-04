@@ -1,8 +1,29 @@
 import Article from '../../../models/article.js';
 
-export async function post(req, res) {
+export async function get(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ slug }).populate({
+        path: 'comments.author_user',
+        select: 'realname'
+    });
+    if (article) {
+        res.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify(article.comments));
+    } else {
+        res.writeHead(404, {
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+            message: `Not found`
+        }));
+    }
+}
+
+export async function post(req, res) {
+    const { slug } = req.params;
+    let article = await Article.findOne({ slug }).populate({
         path: 'comments.author_user',
         select: 'realname'
     });

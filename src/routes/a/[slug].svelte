@@ -2,13 +2,18 @@
     export async function preload({ params, query }) {
         // the `slug` parameter is available because
         // this file is called [slug].svelte
-        const res = await this.fetch(`a/${params.slug}.json`);
-        const data = await res.json();
+        const articleRes = await this.fetch(`a/${params.slug}.json`);
+        const article = await articleRes.json();
 
-        if (res.status === 200) {
-            return { article: data };
+        const commentsRes = await this.fetch(`a/${params.slug}/comments`);
+        const comments = await commentsRes.json();
+
+        if (articleRes.status === 200 && commentsRes.status === 200) {
+            return { article, comments };
+        } else if (articleRes.status !== 200) {
+            this.error(articleRes.status, article.message);
         } else {
-            this.error(res.status, data.message);
+            this.error(commentsRes.status, comments.message);
         }
     }
 </script>
@@ -17,12 +22,13 @@
     import { stores } from '@sapper/app';
     const { session } = stores();
     export let article;
+    export let comments;
 
     let author = '', content = '';
 
     async function postComment()
     {
-        const res = await fetch(`/a/${article.slug}/comment`, {
+        const res = await fetch(`/a/${article.slug}/comments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,8 +39,9 @@
         const json = await res.json();
         if (json.message) {
             alert(json.message);
-        } else if (Array.isArray(json)) {
-            article.comments = json;
+        } else {
+            const res = await fetch(`/a/${article.slug}/comments`);
+            comments = await res.json();
             author = content = '';
         }
     }
@@ -159,7 +166,7 @@
     <hr>
     <h3>Comments</h3>
     <div class="comments">
-    {#each article.comments as comment}
+    {#each comments as comment}
         <div class="comment">
             <p class="comment-meta">
             {#if comment.author_user}
@@ -175,7 +182,7 @@
     {/each}
     </div>
     <h3>Add a Comment</h3>
-    <form method="POST" action={`/a/${article.slug}/comment`}>
+    <form method="POST" action={`/a/${article.slug}/comments`}>
         <p>Name:
         {#if $session.user}
             <input type="text" disabled value={$session.user.realname}>

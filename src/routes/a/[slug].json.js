@@ -9,9 +9,6 @@ export async function get(req, res, next) {
         select: 'realname'
     }).populate({
         path: 'category'
-    }).populate({
-        path: 'comments.author_user',
-        select: 'realname'
     });
 
     if (article) {
