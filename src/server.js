@@ -412,7 +412,7 @@ express()
     })
 
     .use(compression({ threshold: 0 }))
-    .use(sirv('static', { dev }))
+    .use(sirv('./static', { dev }))
     .use(sapper.middleware({
         session: req => ({
             user: req.session.passport ? req.session.passport.user : null
