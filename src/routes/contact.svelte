@@ -25,12 +25,14 @@
                 San Jose, CA 95112
             </address>
             <p><a href="tel:+19257658478">(925) 765-8478</a></p>
+            <p><a href="mailto:mylesl@howfeed.biz">mylesl@howfeed.biz</a></p>
         </div>
         <div>
             <h3>Vincent M. Iannelli</h3>
             <p>Creative Operations Director</p>
             <p>FemboyFinancial Holdings Co., Ltd. (USA LLC)</p>
             <p><a href="tel:+19258134360">(925) 813-4360</a></p>
+            <p><a href="mailto:vincentmiannelli@howfeed.biz">vincentmiannelli@howfeed.biz</a></p>
         </div>
         <div>
             <h3>James N. Shiffer</h3>
