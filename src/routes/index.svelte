@@ -22,6 +22,7 @@
     @media (min-width: 800px) {
         h1.welcome {
             font-size: 8rem !important;
+            display: block !important;
         }
         h2.desc {
             font-size: 2rem !important;
@@ -40,6 +41,7 @@
         font-size: 3.75rem;
         font-size: 3rem;
         text-transform: uppercase;
+        display: none;
     }
     h2.desc {
         margin-bottom: 1rem;

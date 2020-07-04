@@ -37,7 +37,7 @@
     }
     div.link a {
         text-decoration: none;
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     div.wordmark {
         width: 17.5rem;
@@ -59,6 +59,10 @@
         div.items > div {
             margin: 0 1rem;
         }
+        input.search {
+            height: 2.75rem !important;
+            font-size: 2rem !important;
+        }
     }
     @media (min-width: 1280px) {
         div.wordmark {
@@ -77,8 +81,8 @@
     }
     input.search {
         width: 100%;
-        height: 2.75rem;
-        font-size: 2rem;
+        height: 2rem;
+        font-size: 1.5rem;
         margin: 0 auto;
         border: 0.25rem solid black;
     }
