@@ -22,7 +22,7 @@ a {
 
 a:hover {
     color: #508FC3;
-    cursor: url('middlefinger.png'), default;
+    cursor: url('middlefinger.cur'), default;
 }
 
 code {
