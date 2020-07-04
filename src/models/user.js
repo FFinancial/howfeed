@@ -9,7 +9,8 @@ const UserSchema = new Schema({
     username: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     realname: { type: String, required: true },
-    author: { type: Boolean, default: false }
+    author: { type: Boolean, default: false },
+    avatar: { type: String, default: 'default.jpg' }
 });
 
 

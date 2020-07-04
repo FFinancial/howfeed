@@ -17,7 +17,7 @@
     <div class="people">
         <div>
             <h3>Myles C. Linden</h3>
-            <p>Creative Operations Director</p>
+            <p>Director of Financial Growth and Prosperity</p>
             <p>FemboyFinancial Holdings Co., Ltd. (USA LLC)</p>
             <address>
                 1198 South 6th Street<br>

@@ -48,7 +48,7 @@ code {
         font-size: 2rem !important;
     }
     figure.article-image img {
-        height: 12rem !important;
+        height: 24rem !important;
     }
     div.article-list > a {
         margin: 2rem !important;
@@ -83,7 +83,7 @@ figure.article-image {
     margin: 0;
 }
 figure.article-image img {
-    height: 6rem;
+    height: 12rem;
     width: auto;
     object-fit: contain;
     max-width: 100%;
@@ -142,4 +142,10 @@ div.floaty {
     div.floaty {
         padding-top: 5rem !important;
     }
+}
+
+img.avatar {
+    height: 48px;
+    width: 48px;
+    object-fit: cover;
 }

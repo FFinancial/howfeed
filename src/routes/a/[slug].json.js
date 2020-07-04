@@ -6,14 +6,14 @@ export async function get(req, res, next) {
     const { slug } = req.params;
     const article = await Article.findOne({ slug }).populate({
         path: 'author',
-        select: 'realname'
+        select: 'realname avatar'
     }).populate({
         path: 'category'
     });
 
     if (article) {
         article.set({ views: article.views + 1 });
-        article.save();
+        await article.save();
         res.writeHead(200, {
             'Content-Type': 'application/json'
         });

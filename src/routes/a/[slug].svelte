@@ -82,6 +82,10 @@
         margin: 0 0 0.5em 0;
     }
 
+    .content :global(img) {
+        max-width: 100%;
+    }
+
     @media (min-width: 800px) {
         .content {
             width: 75vw;
@@ -154,7 +158,7 @@
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>
         <blockquote>
-            <p>Author: <strong>{article.author.realname}</strong></p>
+            <p>Author: <img class="avatar" alt={article.author.realname} src={`/u/${article.author.avatar || 'default.jpg'}`}> <strong>{article.author.realname}</strong></p>
             <p>Category: <strong><a href={`/c/${article.category.slug}`}>{article.category.name}</a></strong></p>
             <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
             <p>Views: <strong>{article.views}</strong></p>
@@ -168,6 +172,9 @@
     <div class="comments">
     {#each comments as comment}
         <div class="comment">
+            {#if comment.author_user}
+                <img class="avatar" alt={comment.author_user.realname} src={`/u/${comment.author_user.avatar || 'default.jpg'}`}>
+            {/if}
             <p class="comment-meta">
             {#if comment.author_user}
                 <span class="comment-username">{comment.author_user.realname}</span> <span class="comment-verified">(verified)</span> - {new Date(comment.created_at).toLocaleString()}

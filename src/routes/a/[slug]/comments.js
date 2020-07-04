@@ -4,7 +4,7 @@ export async function get(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ slug }).populate({
         path: 'comments.author_user',
-        select: 'realname'
+        select: 'realname avatar'
     });
     if (article) {
         res.writeHead(200, {
@@ -25,7 +25,7 @@ export async function post(req, res) {
     const { slug } = req.params;
     let article = await Article.findOne({ slug }).populate({
         path: 'comments.author_user',
-        select: 'realname'
+        select: 'realname avatar'
     });
 
     if (article) {
@@ -63,7 +63,7 @@ export async function post(req, res) {
         } else {
             article.comments.push({ author, content });
         }
-        article.save();
+        await article.save();
         res.writeHead(200, {
             'Content-Type': 'application/json'
         });
