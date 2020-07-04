@@ -68,7 +68,7 @@
         </a>
     {:else}
         <p>No articles have been published yet :(</p>
-        <p>Chcek back soon!</p>
+        <p>Cheque back soon!</p>
     {/each}
     </div>
 </div>
