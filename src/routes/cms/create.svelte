@@ -18,7 +18,7 @@
     const { session } = stores();
 
     let editor, form, uploadForm;
-    let loading = false;
+    let loading = false, loadingAttach = false;
     let title = '', category = '';
     export let categories;
 
@@ -112,28 +112,35 @@
     async function upload()
     {
         let fd = new FormData(uploadForm);
-        const res = await fetch(`/cms/upload`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            },
-            body: fd
-        });
-        const json = await res.json();
-        if (res.status === 200) {
-            const ans = prompt('(Optional) Enter the dimensions to resize this image to (e.g. "350x150")');
-            if (ans) {
-                const dim = ans.split('x');
-                if (Number.isInteger(+dim[0]) && Number.isInteger(+dim[1])) {
-                    editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" width="${dim[0]}" height="${dim[1]}">`, false);
+        loadingAttach = true;
+        try {
+            const res = await fetch(`/cms/upload`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+            const json = await res.json();
+            if (res.status === 200) {
+                const ans = prompt('(Optional) Enter the dimensions to resize this image to (e.g. "350x150")');
+                if (ans) {
+                    const dim = ans.split('x');
+                    if (Number.isInteger(+dim[0]) && Number.isInteger(+dim[1])) {
+                        editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" width="${dim[0]}" height="${dim[1]}">`, false);
+                    } else {
+                        editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
+                    }
                 } else {
                     editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
                 }
             } else {
-                editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
+                alert(`Error ${res.status}: ${json.message}`);
             }
-        } else {
-            alert(`Error ${res.status}: ${json.message}`);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loadingAttach = false;
         }
     }
 </script>
@@ -169,6 +176,9 @@
     <form enctype="multipart/form-data" action="/cms/upload" method="POST" bind:this={uploadForm}>
         <p>Add Image to Article:
             <input type="file" name="upload" accept="image/*"> <button on:click|preventDefault={upload}>Upload</button>
+            {#if loadingAttach}
+                <progress>Uploading...</progress>
+            {/if}
         </p>
     </form>
     <button on:click={submit}>Submit</button>
