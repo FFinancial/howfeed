@@ -1,4 +1,3 @@
-import sirv from 'sirv';
 import express from 'express';
 import session from 'express-session';
 import compression from 'compression';
@@ -293,7 +292,8 @@ express()
                 }
                 const ext = image.name.match(/(\.[^.]+)$/)[0];
                 const filename = crypto.randomBytes(20).toString('hex') + ext;
-                await image.mv('./static/a/' + filename);
+                const url = `/a/${filename}`;
+                await image.mv('./static' + url);
                 const article = await new Article({ html, title, image: filename, category: cat, author: req.user._id });
                 await article.save();
                 res.writeHead(200, {
@@ -500,7 +500,7 @@ express()
     )
 
     .use(compression({ threshold: 0 }))
-    .use(sirv('./static', { dev }))
+    .use(express.static('./static'))
     .use(sapper.middleware({
         session: req => ({
             user: req.session.passport ? req.session.passport.user : null
