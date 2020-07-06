@@ -18,6 +18,7 @@
     const { session } = stores();
 
     let editor, form, uploadForm;
+    let loading = false;
     let title = '', category = '';
     export let categories;
 
@@ -64,18 +65,25 @@
         let html = editor.getHtml(true);
         let fd = new FormData(form);
         fd.append('html', html);
-        const res = await fetch(`/cms/article`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            },
-            body: fd
-        });
-        const json = await res.json();
-        if (res.status === 200) {
-            goto(`/a/${json.slug}`);
-        } else {
-            alert(`Error ${res.status}: ${json.message}`);
+        loading = true;
+        try {
+            const res = await fetch(`/cms/article`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+            const json = await res.json();
+            if (res.status === 200) {
+                goto(`/a/${json.slug}`);
+            } else {
+                alert(`Error ${res.status}: ${json.message}`);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loading = false;
         }
     }
 
@@ -164,4 +172,7 @@
         </p>
     </form>
     <button on:click={submit}>Submit</button>
+    {#if loading}
+        <progress>Uploading...</progress>
+    {/if}
 </div>

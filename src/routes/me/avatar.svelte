@@ -15,23 +15,31 @@
     import { goto, stores } from '@sapper/app';
     const { session } = stores();
 
+    let loading = false;
     let uploadForm;
 
     async function upload()
     {
         let fd = new FormData(uploadForm);
-        const res = await fetch(`/me/avatar`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            },
-            body: fd
-        });
-        const json = await res.json();
-        if (res.status === 200) {
-            $session.user.avatar = json.filename;
-        } else {
-            alert(`Error ${res.status}: ${json.message}`);
+        loading = true;
+        try {
+            const res = await fetch(`/me/avatar`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+            const json = await res.json();
+            if (res.status === 200) {
+                $session.user.avatar = json.filename;
+            } else {
+                alert(`Error ${res.status}: ${json.message}`);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loading = false;
         }
     }
 
@@ -64,6 +72,9 @@
             Change your photo so you at least have a chance:
             <input type="file" name="upload">
             <button type="submit">Upload</button>
+            {#if loading}
+                <progress>Uploading...</progress>
+            {/if}
         </p>
     </form>
     <p>Or better yet, erase your wretched face from this site entirely: <button on:click={del}>Reset Avatar</button></p>
