@@ -93,11 +93,23 @@
         form input, form textarea {
             width: 25% !important;
         }
+        figure.article-image {
+            height: 24rem !important;
+        }
     }
 
     figure.article-image {
+        height: 12rem;
         width: auto;
-        margin: 0;
+        margin: -2rem;
+        margin-bottom: 1rem;
+        background: #81b0cd; 
+    }
+
+    figure.article-image img {
+        max-height: 100%;
+        box-shadow: -5px 5px 1rem black;
+        object-fit: cover;
     }
 
     div.article-meta {
