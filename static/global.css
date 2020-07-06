@@ -47,9 +47,6 @@ code {
     .article-date {
         font-size: 2rem !important;
     }
-    figure.article-image img {
-        height: 24rem !important;
-    }
     div.article-list > a {
         margin: 2rem !important;
     }
@@ -83,7 +80,6 @@ figure.article-image {
     margin: 0;
 }
 figure.article-image img {
-    height: 12rem;
     width: auto;
     object-fit: contain;
     max-width: 100%;
