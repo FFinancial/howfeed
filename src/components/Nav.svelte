@@ -80,17 +80,19 @@
         min-width: 8rem;
     }
     input.search {
-        width: 100%;
+        width: calc(100% - 0.5rem);
         height: 2rem;
         font-size: 1.5rem;
         margin: 0 auto;
         border: 0.25rem solid black;
+        outline: none;
     }
     input.search:focus::placeholder {
         opacity: 0;
     }
     input.search::placeholder {
         opacity: 1;
+        color: #000;
         font-weight: bold;
         font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     }
