@@ -9,6 +9,7 @@
     }
     div.people > div {
         flex: 1 0 0;
+        padding: 1rem;
     }
 </style>
 

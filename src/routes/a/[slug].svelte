@@ -84,6 +84,7 @@
 
     .content :global(img) {
         max-width: 100%;
+        height: auto;
     }
 
     @media (min-width: 800px) {
@@ -100,10 +101,10 @@
 
     figure.article-image {
         height: 12rem;
-        width: auto;
+        width: auto !important;
         margin: -2rem;
         margin-bottom: 1rem;
-        background: #81b0cd; 
+        background: #81b0cd;
     }
 
     figure.article-image img {
