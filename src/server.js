@@ -10,6 +10,7 @@ import sessionFileStore from 'session-file-store';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import fileUpload from 'express-fileupload';
 import fs from 'fs';
+import cors from 'cors';
 import helmet from 'helmet';
 import crypto from 'crypto';
 import Article from './models/article.js';
@@ -108,6 +109,7 @@ const isAuthor = function(req, res, next) {
 
 express()
     .use(helmet())
+    .use(cors())
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(fileUpload({
@@ -178,6 +180,7 @@ express()
                 }));
                 return false;
             }
+            /*
             try {
                 await registerRateLimiter.consume();
             } catch (err) {
@@ -189,6 +192,7 @@ express()
                 }));
                 return false;
             }
+            */
             try {
                 const user = await User.findOne({ username: req.body.username });
                 if (user) {
@@ -222,7 +226,7 @@ express()
     )
 
     .post('/cms/login',
-        rateLimiterMiddleware(loginAttemptRateLimiter),
+        // rateLimiterMiddleware(loginAttemptRateLimiter),
         passport.authenticate('local', { failWithError: true }),
         function(req, res, next) {
             // handle success
