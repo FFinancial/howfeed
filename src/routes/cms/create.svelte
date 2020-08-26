@@ -123,11 +123,17 @@
             });
             const json = await res.json();
             if (res.status === 200) {
-                const ans = prompt('(Optional) Enter the dimensions to resize this image to (e.g. "350x150")');
+                const ans = prompt('(Optional) Enter the width/height to resize this image to (e.g. "350x150" for exact dimensions, "350x" for just width, "x150" for just height)');
                 if (ans) {
                     const dim = ans.split('x');
-                    if (Number.isInteger(+dim[0]) && Number.isInteger(+dim[1])) {
+                    let validWidth = Number.isInteger(+dim[0]);
+                    let validHeight = Number.isInteger(+dim[1]);
+                    if (validWidth && validHeight) {
                         editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" width="${dim[0]}" height="${dim[1]}">`, false);
+                    } else if (validWidth) {
+                        editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" width="${dim[0]}">`, false);
+                    } else if (validHeight) {
+                        editor.setHtml(editor.getHtml(true) + `<img src="${json.url}" height="${dim[1]}">`, false);
                     } else {
                         editor.setHtml(editor.getHtml(true) + `<img src="${json.url}">`, false);
                     }
