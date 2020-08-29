@@ -39,6 +39,9 @@
         text-decoration: none;
         font-size: 1.5rem;
     }
+    div.items div {
+        margin-bottom: 0.5rem;
+    }
     div.wordmark {
         width: 17.5rem;
     }
