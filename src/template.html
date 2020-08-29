@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width,initial-scale=1.0'>
-    <meta name='description' content='HOWFEED.BIZ: Where we break the news.'>
+    <meta name='description' content='HOWFEED.BIZ: Helping you to navigate a modern world.'>
     <meta name='keywords' content='news, satire, blog'>
 	<meta name='theme-color' content='#508FC3'>
 	%sapper.base%
@@ -19,9 +19,13 @@
 
   gtag('config', 'UA-175013738-1');
 	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js"></script>
 </head>
 <body>
 	<div id='hydrate'>%sapper.html%</div>
 	%sapper.scripts%
+	<script type="text/javascript">
+		flexibility(document.documentElement);
+	</script>
 </body>
 </html>

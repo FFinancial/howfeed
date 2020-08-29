@@ -53,7 +53,7 @@ module.exports = {
                             onwarn
 						}
 					}
-                },
+                }
 			]
 		},
 		mode,

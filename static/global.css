@@ -81,6 +81,7 @@ div.article-list {
 }
 div.article-list > a {
     margin: 2rem;
+    -js-display: flex;
     display: flex;
     text-decoration: none;
     flex-direction: column;
@@ -88,6 +89,7 @@ div.article-list > a {
 }
 figure.article-image {
     background: white;
+    -js-display: flex;
     display: flex;
     align-self: center;
     justify-content: center;
