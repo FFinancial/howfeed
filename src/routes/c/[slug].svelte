@@ -32,12 +32,12 @@
     }
     @media (min-width: 800px) {
         h1 {
-            font-size: 4rem !important;
+            font-size: 4rem;
         }
     }
     @media (min-width: 1280px) {
         h1 {
-            font-size: 8rem !important;
+            font-size: 8rem;
         }
     }
 </style>
@@ -53,9 +53,9 @@
     <div class="article-list">
     {#each articles as {title, slug, image, created_at}}
         <a rel="prefetch" href={`/a/${slug}`}>
-            <figure class="article-image">
+            <div class="article-image">
                 <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
-            </figure>
+            </div>
             <div class="article-meta">
                 <p class="article-title">{title}</p>
                 <p class="article-date">{new Date(created_at).toLocaleDateString()}</p>

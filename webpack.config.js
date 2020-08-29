@@ -28,7 +28,7 @@ module.exports = {
                         options: {
                             presets: [
                                 ['@babel/preset-env', {
-                                    targets: '> 0.25%, ie >= 6, not dead'
+                                    targets: '> 0.25%, ie >= 8, not dead'
                                 }]
                             ],
                             plugins: [

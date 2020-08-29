@@ -11,6 +11,9 @@
         flex: 1 0 0;
         padding: 1rem;
     }
+    iframe {
+        max-width: 100%;
+    }
 </style>
 
 <div class="content">

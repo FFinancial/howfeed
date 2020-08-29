@@ -3,17 +3,10 @@
     const { session } = stores();
 
     let query = '';
-
-    function search(e)
-    {
-        if (e.keyCode === 13) {
-            goto(`/search/${encodeURIComponent(query)}`);
-        }
-    }
 </script>
 
 <style>
-    nav {
+    div.nav {
         font-weight: bold;
         position: absolute;
         padding: 0.5rem;
@@ -49,35 +42,6 @@
         vertical-align: middle;
         max-width: 100%;
     }
-    @media (min-width: 800px) {
-        div.wordmark {
-            width: 15rem !important;
-        }
-        div.items {
-            flex-direction: row;
-        }
-        div.link a {
-            font-size: 1.5rem !important;
-        }
-        div.items > div {
-            margin: 0 1rem;
-        }
-        input.search {
-            height: 2.75rem !important;
-            font-size: 2rem !important;
-        }
-    }
-    @media (min-width: 1280px) {
-        div.wordmark {
-            width: 17.5rem !important;
-        }
-        div.link a {
-            font-size: 2rem !important;
-        }
-        div.items > div {
-            margin: 0 2rem !important;
-        }
-    }
     div.search {
         flex: 1 1 0;
         min-width: 8rem;
@@ -99,13 +63,48 @@
         font-weight: bold;
         font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     }
+    @media (min-width: 800px) {
+        div.wordmark {
+            width: 15rem;
+        }
+        div.items {
+            flex-direction: row;
+        }
+        div.link a {
+            font-size: 1.5rem;
+        }
+        div.items > div {
+            margin: 0 1rem;
+        }
+        input.search {
+            height: 2.75rem;
+            font-size: 2rem;
+        }
+    }
+    @media (min-width: 1280px) {
+        div.wordmark {
+            width: 17.5rem;
+        }
+        div.link a {
+            font-size: 2rem;
+        }
+        div.items > div {
+            margin: 0 2rem;
+        }
+    }
 </style>
 
-<nav>
+<div class="nav">
     <div class="items">
         <div class="wordmark"><a href="/"><img class="wordmark" src="/logo.png" alt="HowFeed.biz"></a></div>
         <div class="search">
-            <input class="search" on:keyup={search} bind:value={query} type="text" placeholder="Search">
+            <form action="/search" method="GET">
+                <input class="search" on:keyup={e => {
+                    if (e.keyCode === 13) {
+                        e.target.parentElement.submit();
+                    }
+                }} type="text" placeholder="Search" name="query">
+            </form>
         </div>
         {#if !$session.user}
             <div class="link"><a href="/contact">Contact Us</a></div>
@@ -114,4 +113,4 @@
             <div class="link"><a href="/cms/logout">Logout</a></div>
         {/if}
     </div>
-</nav>
+</div>

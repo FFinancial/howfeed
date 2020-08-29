@@ -19,23 +19,6 @@
     h1, h2, p {
         margin: 0 auto;
     }
-    @media (min-width: 800px) {
-        h1.welcome {
-            font-size: 8rem !important;
-            display: block !important;
-        }
-        h2.desc {
-            font-size: 2rem !important;
-        }
-    }
-    @media (min-width: 1280px) {
-        h1.welcome {
-            font-size: 10rem !important;
-        }
-        h2.desc {
-            font-size: 3.5rem !important;
-        }
-    }
     h1.welcome {
         margin: 1rem 0;
         font-size: 3.75rem;
@@ -47,6 +30,23 @@
         margin-bottom: 1rem;
         font-size: 1.5rem;
         text-transform: uppercase;
+    }
+    @media (min-width: 800px) {
+        h1.welcome {
+            font-size: 8rem;
+            display: block;
+        }
+        h2.desc {
+            font-size: 2rem;
+        }
+    }
+    @media (min-width: 1280px) {
+        h1.welcome {
+            font-size: 10rem;
+        }
+        h2.desc {
+            font-size: 3.5rem;
+        }
     }
 </style>
 
@@ -60,9 +60,9 @@
     <div class="article-list">
     {#each articles as {title, slug, image, created_at}}
         <a rel="prefetch" href={`/a/${slug}`}>
-            <figure class="article-image">
+            <div class="article-image">
                 <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
-            </figure>
+            </div>
             <div class="article-meta">
                 <p class="article-title">{title}</p>
                 <p class="article-date">{new Date(created_at).toLocaleDateString()}</p>

@@ -1,5 +1,5 @@
 <style>
-    footer {
+    div.footer {
         box-sizing: border-box;
         text-align: center;
         position: fixed;
@@ -12,6 +12,6 @@
     }
 </style>
 
-<footer>
+<div class="footer">
     Copyright &copy; {new Date().getFullYear()} FemboyFinancial Holdings Co., Ltd. (USA LLC). All rights reserved.
-</footer>
+</div>

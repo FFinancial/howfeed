@@ -87,30 +87,17 @@
         height: auto;
     }
 
-    @media (min-width: 800px) {
-        .content {
-            width: 75vw;
-        }
-        form input, form textarea {
-            width: 25% !important;
-        }
-        figure.article-image {
-            height: 24rem !important;
-        }
-    }
-
-    figure.article-image {
+    div.article-image {
         height: 12rem;
-        width: auto !important;
+        width: auto;
         margin: -2rem;
         margin-bottom: 1rem;
         background: #81b0cd;
     }
 
-    figure.article-image img {
-        max-height: 100%;
+    div.article-image img {
         box-shadow: -5px 5px 1rem black;
-        object-fit: cover;
+        height: 100%;
     }
 
     div.article-meta {
@@ -158,6 +145,18 @@
     div.comment-content {
         word-break: break-word;
     }
+
+    @media (min-width: 800px) {
+        .content {
+            width: 75vw;
+        }
+        form input, form textarea {
+            width: 25%;
+        }
+        div.article-image {
+            height: 24rem;
+        }
+    }
 </style>
 
 <svelte:head>
@@ -165,9 +164,9 @@
 </svelte:head>
 
 <div class="content">
-    <figure class="article-image">
+    <div class="article-image">
         <img alt={article.title} src={`/a/${article.image}`}>
-    </figure>
+    </div>
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>
         <blockquote>

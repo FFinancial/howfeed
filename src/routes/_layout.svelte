@@ -12,7 +12,7 @@
 </script>
 
 <style>
-    main {
+    div.main {
         max-width: 100%;
         box-sizing: border-box;
     }
@@ -20,7 +20,7 @@
 
 <Nav />
 
-<main>
+<div class="main">
     <slot></slot>
     <Footer />
-</main>
+</div>
