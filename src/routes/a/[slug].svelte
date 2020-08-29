@@ -56,6 +56,11 @@
         so we have to use the :global(...) modifier to target
         all elements inside .content
     */
+    :global(.article-content) {
+        font-size: 18px;
+        font-family: 'EB Garamond';
+    }
+
     .content :global(h2) {
         font-size: 1.4em;
         font-weight: 500;
