@@ -52,7 +52,7 @@
     <h1>{category.name}</h1>
     <div class="article-list">
     {#each articles as {title, slug, image, created_at}}
-        <a rel="prefetch" href={`/a/${slug}`}>
+        <a href={`/a/${slug}`}>
             <div class="article-image">
                 <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
             </div>

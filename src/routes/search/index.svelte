@@ -42,7 +42,7 @@
     <h1>Search Results for: {query}</h1>
     <div class="article-list">
     {#each results as {title, slug, image, created_at}}
-        <a rel="prefetch" href={`/a/${slug}`}>
+        <a href={`/a/${slug}`}>
             <div class="article-image">
                 <img src={image ? `/a/${image}` : '/logo.png'} alt={title}>
             </div>
