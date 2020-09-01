@@ -3,7 +3,12 @@
         // the `slug` parameter is available because
         // this file is called [slug].svelte
         const articleRes = await this.fetch(`a/${params.slug}.json`);
-        const article = await articleRes.json();
+        let article = await articleRes.json();
+
+        // parse article steps from numbered list
+        article.steps = [...article.html.matchAll(/>\d+\. ([^<]+)</g)]
+                        .map(i => i[1])
+                        .map(i => ({ "@type": "HowToStep", text: i }));
 
         const commentsRes = await this.fetch(`a/${params.slug}/comments`);
         const comments = await commentsRes.json();
@@ -166,6 +171,37 @@
 
 <svelte:head>
     <title>{article.title} | HOWFEED.BIZ</title>
+    <meta name="author" content={article.author.realname}>
+    {@html `<script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "HowFeed.biz",
+        "item": "https://howfeed.biz"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "${article.category.name}",
+        "item": "https://howfeed.biz/c/${article.category.slug}"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "${article.title}",
+        "item": "https://howfeed.biz/a/${article.slug}"
+      }]
+    }</script>`}
+    {@html `<script type="application/ld+json">{
+      "@context": "http://schema.org",
+      "@type": "HowTo",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://howfeed.biz/a/${article.image}"
+      },
+      "name": ${JSON.stringify(article.title)},
+      "step": ${JSON.stringify(article.steps)}
+    }</script>`}
 </svelte:head>
 
 <div class="content">

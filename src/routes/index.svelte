@@ -52,6 +52,7 @@
 
 <svelte:head>
     <title>HOWFEED.BIZ</title>
+    <meta name="description" content="HOWFEED.BIZ: Helping you to navigate a modern world.">
 </svelte:head>
 
 <div class="background"></div>

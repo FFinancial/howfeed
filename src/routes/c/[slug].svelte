@@ -19,6 +19,24 @@
 
 <svelte:head>
     <title>{category.name} Articles | HOWFEED.BIZ</title>
+    <meta name="description" content={`Read our articles about ${category.name} on HowFeed.biz.`}>
+    <script type="application/ld+json">{`
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "HowFeed.biz",
+        "item": "https://howfeed.biz"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "${article.category.name}",
+        "item": "https://howfeed.biz/c/${article.category.slug}"
+      }]
+    }
+    `}</script>
 </svelte:head>
 
 <style>
