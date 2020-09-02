@@ -11,6 +11,7 @@ const ArticleSchema = new Schema({
     slug: { type: String, index: { unique: true } },
     image: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date },
     html: { type: String, required: true },
     comments: [{
         content: { type: String, required: true },

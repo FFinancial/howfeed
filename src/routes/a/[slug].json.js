@@ -12,7 +12,9 @@ export async function get(req, res, next) {
     });
 
     if (article) {
-        article.set({ views: article.views + 1 });
+        if (req.query.no_view !== '1') {
+            article.set({ views: article.views + 1 });
+        }
         await article.save();
         res.writeHead(200, {
             'Content-Type': 'application/json'

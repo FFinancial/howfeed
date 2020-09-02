@@ -22,7 +22,7 @@
     {#if user.author}
         <h1>HowFeed Publisher Dashboard</h1>
         <p><a href="/cms/create">Publish a new article</a></p>
-        <p><strike><a href="/cms/update">Edit an existing article</a></strike> Coming soon!</p>
+        <p><a href="/cms/edit">Edit an existing article</a></p>
         <p><a href="/cms/delete">Delete an article</a></p>
         <h1>Account Settings</h1>
         <p><a href="/me/avatar">Change your avatar</a></p>

@@ -251,13 +251,27 @@ express()
         });
     })
 
-    .post('/cms/article',
+    .post('/cms/article/:edit?',
         isAuthor,
         async function(req, res, next) {
             try {
+                let editArticle;
+                if (req.params.edit) {
+                    editArticle = await Article.findOne({ slug: req.params.edit });
+                    if (!editArticle) {
+                        res.writeHead(404, {
+                            'Content-Type': 'application/json'
+                        });
+                        res.end(JSON.stringify({
+                            message: `Article to edit not found`
+                        }));
+                        return false;
+                    }
+                }
+
                 const { html, title, category } = req.body;
-                const { image } = req.files;
-                if (!title || !image || !html || !category) {
+                const image = req.files && req.files.image;
+                if (!title || (!editArticle && !image) || !html || !category) {
                     res.writeHead(422, {
                         'Content-Type': 'application/json'
                     });
@@ -266,23 +280,30 @@ express()
                     }));
                     return false;
                 }
-                if (!/^image\//.test(image.mimetype)) {
-                    res.writeHead(422, {
-                        'Content-Type': 'application/json'
-                    });
-                    res.end(JSON.stringify({
-                        message: `Invalid MIME type for the header image file.`
-                    }));
-                    return false;
-                }
-                if (image.truncated) {
-                    res.writeHead(422, {
-                        'Content-Type': 'application/json'
-                    });
-                    res.end(JSON.stringify({
-                        message: `Received truncated image file. Try again with a smaller file.`
-                    }));
-                    return false;
+                let ext, filename, url;
+                if (image) {
+                    if (!/^image\//.test(image.mimetype)) {
+                        res.writeHead(422, {
+                            'Content-Type': 'application/json'
+                        });
+                        res.end(JSON.stringify({
+                            message: `Invalid MIME type for the header image file.`
+                        }));
+                        return false;
+                    }
+                    if (image.truncated) {
+                        res.writeHead(422, {
+                            'Content-Type': 'application/json'
+                        });
+                        res.end(JSON.stringify({
+                            message: `Received truncated image file. Try again with a smaller file.`
+                        }));
+                        return false;
+                    }
+                    ext = image.name.match(/(\.[^.]+)$/)[0];
+                    filename = crypto.randomBytes(20).toString('hex') + ext;
+                    url = `/a/${filename}`;
+                    await image.mv('./static' + url);
                 }
                 const cat = await Category.findOne({ slug: category });
                 if (!cat) {
@@ -294,18 +315,30 @@ express()
                     }));
                     return false;
                 }
-                const ext = image.name.match(/(\.[^.]+)$/)[0];
-                const filename = crypto.randomBytes(20).toString('hex') + ext;
-                const url = `/a/${filename}`;
-                await image.mv('./static' + url);
-                const article = await new Article({ html, title, image: filename, category: cat, author: req.user._id });
-                await article.save();
-                res.writeHead(200, {
-                    'Content-Type': 'application/json'
-                });
-                res.end(JSON.stringify({
-                    slug: article.slug
-                }));
+                if (editArticle) {
+                    let newObj = {
+                        html, title, category: cat, updated_at: Date.now()
+                    };
+                    if (filename) {
+                        newObj.image = filename;
+                    }
+                    await Article.updateOne({ slug: editArticle.slug }, { $set: newObj });
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        slug: editArticle.slug
+                    }));
+                } else {
+                    const article = await new Article({ html, title, image: filename, category: cat, author: req.user._id });
+                    await article.save();
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({
+                        slug: article.slug
+                    }));
+                }
             } catch (err) {
                 res.writeHead(500, {
                     'Content-Type': 'application/json'

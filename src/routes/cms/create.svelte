@@ -6,7 +6,9 @@
         }
         const res = await this.fetch('/c.json');
         const categories = await res.json();
-        return { user: session.user, categories };
+        const origRes = page.query.edit && await this.fetch(`/a/${page.query.edit}.json?no_view=1`)
+        const editArticle = origRes && await origRes.json();
+        return { user: session.user, categories, editArticle };
     }
 </script>
 
@@ -20,6 +22,7 @@
     let editor, form, uploadForm;
     let loading = false, loadingAttach = false;
     let title = '', category = '';
+    export let editArticle = undefined;
     export let categories;
 
     let actions = [
@@ -55,9 +58,9 @@
     ];
 
     onMount(function load() {
-        title = window.localStorage['title'] || '';
-        category = window.localStorage['category'] || '';
-        editor.setHtml(window.localStorage['html'] || '', false);
+        title = editArticle ? editArticle.title : (window.localStorage['title'] || '');
+        category = editArticle ? editArticle.category.slug : (window.localStorage['category'] || '');
+        editor.setHtml(editArticle ? editArticle.html : (window.localStorage['html'] || ''), false);
     });
 
     async function submit()
@@ -67,7 +70,7 @@
         fd.append('html', html);
         loading = true;
         try {
-            const res = await fetch(`/cms/article`, {
+            const res = await fetch(editArticle ? `/cms/article/${editArticle.slug}` : `/cms/article`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json'

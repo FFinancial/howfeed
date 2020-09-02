@@ -214,6 +214,9 @@
             <p>Author: <img class="avatar" alt={article.author.realname} src={`/u/${article.author.avatar || 'default.jpg'}`}> <strong>{article.author.realname}</strong></p>
             <p>Category: <strong><a href={`/c/${article.category.slug}`}>{article.category.name}</a></strong></p>
             <p>Published: <strong>{new Date(article.created_at).toLocaleString()}</strong></p>
+            {#if article.updated_at}
+            <p>Last Updated: <strong>{new Date(article.updated_at).toLocaleString()}</strong></p>
+            {/if}
             <p>Views: <strong>{article.views}</strong></p>
         </blockquote>
     </div>
