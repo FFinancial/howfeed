@@ -171,7 +171,25 @@
 
 <svelte:head>
     <title>{article.title} | HOWFEED.BIZ</title>
+
+    <meta property="og:title" content={article.title}>
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="HowFeed">
+    <meta property="og:image" content={`https://howfeed.biz/a/${article.image}`}>
+    <meta property="og:url" content={`https://howfeed.biz/a/${article.slug}`}>
+    <meta property="article:published_time" content={new Date(article.created_at).toISOString()}>
+    {#if article.updated_at}
+        <meta property="article:modified_time" content={new Date(article.updated_at).toISOString()}>
+    {/if}
+    <meta property="article:author:first_name" content={article.author.realname.split(' ')[0]}>
+    <meta property="article:author:last_name" content={article.author.realname.split(' ').slice(1)}>
+    <meta property="article:section" content={article.category.name}>
+
     <meta name="author" content={article.author.realname}>
+    {#if article.description}
+        <meta name="description" property="og:description" content={article.description}>
+    {/if}
     {@html `<script type="application/ld+json">{
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

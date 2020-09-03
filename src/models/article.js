@@ -9,6 +9,7 @@ const ArticleSchema = new Schema({
         ref: 'User'
     },
     slug: { type: String, index: { unique: true } },
+    description: { type: String, required: false },
     image: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date },
