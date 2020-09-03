@@ -176,14 +176,14 @@
     <meta property="og:type" content="article">
     <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="HowFeed">
-    <meta property="og:image" content={`https://howfeed.biz/a/${article.image}`}>
+    <meta name="thumbnail" property="og:image" content={`https://howfeed.biz/a/${article.image}`}>
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="og:url" content={`https://howfeed.biz/a/${article.slug}`}>
     <meta property="article:published_time" content={new Date(article.created_at).toISOString()}>
+    <meta name="pubdate" property="og:pubdate" content={new Date(article.created_at).toISOString()}>
     {#if article.updated_at}
         <meta property="article:modified_time" content={new Date(article.updated_at).toISOString()}>
     {/if}
-    <meta property="article:author:first_name" content={article.author.realname.split(' ')[0]}>
-    <meta property="article:author:last_name" content={article.author.realname.split(' ').slice(1)}>
     <meta property="article:section" content={article.category.name}>
 
     <meta name="author" content={article.author.realname}>

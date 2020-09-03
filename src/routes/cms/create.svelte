@@ -21,7 +21,7 @@
 
     let editor, form, uploadForm;
     let loading = false, loadingAttach = false;
-    let title = '', category = '';
+    let title = '', category = '', description = '';
     export let editArticle = undefined;
     export let categories;
 
@@ -33,6 +33,7 @@
             result: function save() {
                 window.localStorage['title'] = title;
                 window.localStorage['category'] = category;
+                window.localStorage['description'] = description;
                 window.localStorage['html'] = editor.getHtml(true);
                 alert('Successfully saved draft to browser local storage');
             }
@@ -59,6 +60,7 @@
 
     onMount(function load() {
         title = editArticle ? editArticle.title : (window.localStorage['title'] || '');
+        description = editArticle ? editArticle.description : (window.localStorage['description'] || '');
         category = editArticle ? editArticle.category.slug : (window.localStorage['category'] || '');
         editor.setHtml(editArticle ? editArticle.html : (window.localStorage['html'] || ''), false);
     });
@@ -167,8 +169,12 @@
 <div class="content">
     <a href="/cms">&lt; Back to Dashboard</a>
     <h1>HowFeed Publisher</h1>
+    {#if editArticle}
+        <h3>Editing "{editArticle.title}"</h3>
+    {/if}
     <form enctype="multipart/form-data" method="POST" action="/cms/article" bind:this={form}>
         <p>Article Title: <input type="text" name="title" bind:value={title} required placeholder="How to Assassinate the Governor of California"></p>
+        <p>Article Description (optional): <input type="text" name="description" bind:value={description} placeholder="Sick of big government? Here's a helpful guide on how to stick it to the man!"></p>
         <p>Article Author: <strong>{$session.user.realname}</strong></p>
         <p>Article Category:
         {#if categories.length}
@@ -179,7 +185,12 @@
             </select>
         {/if}
         <button on:click|preventDefault={addCategory}>+</button></p>
-        <p>Article Header Image: <input type="file" name="image" accept="image/*" required></p>
+        <p>Article Header Image:
+            <input type="file" name="image" accept="image/*" required={!editArticle}>
+            {#if editArticle}
+                (leave empty if you don't want to replace it)
+            {/if}
+        </p>
     </form>
     <Editor bind:this={editor} {actions} />
     <form enctype="multipart/form-data" action="/cms/upload" method="POST" bind:this={uploadForm}>

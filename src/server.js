@@ -269,7 +269,7 @@ express()
                     }
                 }
 
-                const { html, title, category } = req.body;
+                const { html, title, category, description } = req.body;
                 const image = req.files && req.files.image;
                 if (!title || (!editArticle && !image) || !html || !category) {
                     res.writeHead(422, {
@@ -317,7 +317,7 @@ express()
                 }
                 if (editArticle) {
                     let newObj = {
-                        html, title, category: cat, updated_at: Date.now()
+                        html, title, description, category: cat, updated_at: Date.now()
                     };
                     if (filename) {
                         newObj.image = filename;
@@ -330,7 +330,7 @@ express()
                         slug: editArticle.slug
                     }));
                 } else {
-                    const article = await new Article({ html, title, image: filename, category: cat, author: req.user._id });
+                    const article = await new Article({ html, title, image: filename, category: cat, description, author: req.user._id });
                     await article.save();
                     res.writeHead(200, {
                         'Content-Type': 'application/json'
