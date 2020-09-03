@@ -12,7 +12,7 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cl-editor": "^2.1.0",
     "compression": "^1.7.1",
@@ -28,7 +28,8 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "rate-limiter-flexible": "^2.1.10",
-    "session-file-store": "^1.4.0"
+    "session-file-store": "^1.4.0",
+    "useragent": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
