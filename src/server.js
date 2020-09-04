@@ -13,10 +13,13 @@ import fs from 'fs';
 import cors from 'cors';
 import helmet from 'helmet';
 import useragent from 'useragent';
+import path from 'path';
 import crypto from 'crypto';
 import Article from './models/article.js';
 import Category from './models/category.js';
 import User from './models/user.js';
+import legacyMiddleware from './legacy/middleware.js';
+import legacyRouter from './legacy/router.js';
 
 require('dotenv').config();
 const FileStore = sessionFileStore(session);
@@ -108,30 +111,13 @@ const isAuthor = function(req, res, next) {
 };
 
 
-express()
-    .use(helmet())
-    .use(cors())
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: true }))
-    .use(fileUpload({
-        limits: { fileSize: 16000000 }
-    }))
-    .use(session({
-        secret: SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            httpOnly: true,
-            maxAge: 31536000
-        },
-        store: new FileStore({
-            path: '.sessions'
-        })
-    }))
-    .use(passport.initialize())
-    .use(passport.session())
+var app = express();
+app.set('view engine', 'ejs');
+app.set('views', process.cwd() + '/src/legacy/views');
 
-    .post('/cms/login',
+var mainRouter = express.Router();
+mainRouter
+	.post('/cms/login',
         // rateLimiterMiddleware(loginAttemptRateLimiter),
         passport.authenticate('local', { failWithError: true }),
         function(req, res, next) {
@@ -148,7 +134,6 @@ express()
             }));
         }
     )
-
     .get('/cms/logout', (req, res, next) => {
         req.logout();
         req.session.destroy(function (err) {
@@ -156,7 +141,6 @@ express()
             return res.redirect('/');
         });
     })
-
     .post('/cms/article/:edit?',
         isAuthor,
         async function(req, res, next) {
@@ -255,7 +239,6 @@ express()
             }
         }
     )
-
     .post('/cms/upload',
         isAuthor,
         async function(req, res, next) {
@@ -306,7 +289,6 @@ express()
             }
         }
     )
-
     .post('/cms/category',
         isAuthor,
         async function(req, res, next) {
@@ -338,7 +320,6 @@ express()
             }
         }
     )
-
     .post('/me/avatar',
         async function(req, res, next) {
             if (!req.user) {
@@ -399,20 +380,43 @@ express()
                 }));
             }
         }
-    )
+    );
 
-    .use(compression({ threshold: 0 }))
-    .use(express.static('./static'))
-	.use(async function (req, res, next) {
-		if (req.useragent.browser) {
-		}
-	})
-    .use(sapper.middleware({
-        session: req => ({
-            user: req.session.passport ? req.session.passport.user : null
+app.use(helmet())
+    .use(cors())
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(fileUpload({
+        limits: { fileSize: 16000000 }
+    }))
+    .use(session({
+        secret: SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            httpOnly: true,
+            maxAge: 31536000
+        },
+        store: new FileStore({
+            path: '.sessions'
         })
     }))
-
+    .use(passport.initialize())
+    .use(passport.session())
+    .use(compression({ threshold: 0 }))
+    .use(express.static('./static'))
+	.use('/', mainRouter)
+	.use('/legacy', legacyRouter)
+	.use(legacyMiddleware((req, res) => {
+		if (req.baseUrl !== '/legacy') {
+			res.redirect('/legacy' + req.originalUrl);
+		}
+	}))
+	.use(sapper.middleware({
+		session: req => ({
+			user: req.session.passport ? req.session.passport.user : null
+		})
+	}))
     .listen(PORT, err => {
         if (err) console.log('error', err);
         console.log(`Express server listening on port ${PORT}`);
