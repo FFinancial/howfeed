@@ -3,6 +3,13 @@
     const { session } = stores();
 
     let query = '';
+	
+	async function findRandomArticle()
+	{
+		var res = await fetch('/a/random');
+		var randArticle = await res.json();
+		goto(`/a/${randArticle.slug}`);
+	}
 </script>
 
 <style>
@@ -108,6 +115,7 @@
         </div>
         {#if !$session.user}
             <div class="link"><a href="/contact">Contact Us</a></div>
+            <div class="link"><a href="#" on:click={findRandomArticle}>Random</a></div>
         {:else}
             <div class="link"><a href="/cms">Dashboard</a></div>
             <div class="link"><a href="/cms/logout">Logout</a></div>

@@ -1,9 +1,14 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>HOWFEED.biz</title>
-	</head>
-	<body>
-		<h1>Hello world</h1>
-	</body>
-</html>
+<%- include('header') -%>
+<tr height="64" style="background: url('/background.png');" align="center">
+	<td colspan="6"><h1 style="line-height: 64px;font-size: 48px; margin:0;">WELCOME</h1></td>
+</tr>
+<% for (var article of articles) { %>
+<tr height="85" bgcolor="#96C8EA" style="overflow: scroll">
+	<td></td>
+	<td bgcolor="white" align="center">
+		<img src="http://howfeed.biz/a/<%= article.image %>" height="75" alt="<%= article.title %>">
+	</td>
+	<td colspan="4"><%= article.title %></td>
+</tr>
+<% } %>
+<%- include('footer') -%>
