@@ -8,6 +8,7 @@ export async function get(req, res)
     if (slug === 'all') {
         articles = await Article.find()
                                 .sort({ created_at: 'desc' })
+								.select('title slug image created_at views')
                                 .populate({ path: 'category' })
                                 .populate({ path: 'author', select: 'realname' });
     } else {
@@ -23,6 +24,7 @@ export async function get(req, res)
         } else {
             articles = await Article.find({ category: cat.id })
                                     .sort({ created_at: 'desc' })
+									.select('title slug image created_at views')
                                     .populate({ path: 'category' })
                                     .populate({ path: 'author', select: 'realname' });
         }

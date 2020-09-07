@@ -3,7 +3,7 @@
     {
         const res = await this.fetch(`/c/all.json`);
         const { articles } = await res.json();
-        return { articles };
+        return { articles, randomArticle };
     }
 </script>
 
