@@ -4,10 +4,12 @@ import Article from '../models/article.js';
 const app = express.Router();
 
 app.get('/', async function (req, res) {
-	let page = Number.isInteger(req.query.page) && req.query.page > 0 ? req.query.page : 1;
+	let intPage = +req.query.page;
+	let page = Number.isInteger(intPage) && intPage > 0 ? intPage : 1;
 	let offset = (page - 1) * 4;
 	let articles = await Article.find().sort('-created_at').limit(4).skip(offset);
-	res.render('index', { articles, offset });
+	let hasNextPage = (await Article.countDocuments()) > offset + 4;
+	res.render('index', { articles, offset, hasNextPage, page });
 });
 
 app.use(function (req, res) {

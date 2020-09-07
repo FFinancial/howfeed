@@ -2,13 +2,40 @@
 <tr height="64" style="background: url('/background.png');" align="center">
 	<td colspan="6"><h1 style="line-height: 64px;font-size: 48px; margin:0;">WELCOME</h1></td>
 </tr>
-<% for (var article of articles) { %>
-<tr height="85" bgcolor="#96C8EA" style="overflow: scroll">
-	<td></td>
-	<td bgcolor="white" align="center">
-		<img src="http://howfeed.biz/a/<%= article.image %>" height="75" alt="<%= article.title %>">
-	</td>
-	<td colspan="4"><%= article.title %></td>
+<% for (var i = 0; i < 4; i++) { %>
+<tr height="80" bgcolor="#96C8EA" style="overflow: scroll">
+	<% if (i < articles.length) { %>
+		<td></td>
+		<td bgcolor="white" align="center" valign="center">
+			<a href="/a/<%= articles[i].slug %>">
+				<img style="vertical-align: top;" src="/a/<%= articles[i].image %>" height="65" alt="<%= articles[i].title %>">
+			</a>
+		</td>
+		<td colspan="4">
+			<a href="/a/<%= articles[i].slug %>" style="margin-left: 8px; font-weight: normal;">
+				<%= articles[i].title %>
+			</a>
+		</td>
+	<% } else { %>
+		<td colspan="6"></td>
+	<% } %>
+</tr>
+<% } %>
+<% if (page > 1 || hasNextPage) { %>
+<tr bgcolor="#96C8EA" height="40">
+	<% if (page > 1) { %>
+		<td colspan="<%= hasNextPage ? 2 : 6 %>" align="center">
+			<button onclick="window.location.href = '/?page=<%= page - 1 %>';">&lt; Previous Page</button>
+		</td>
+	<% } %>
+	<% if (page > 1 && hasNextPage) { %>
+		<td colspan="2"></td>
+	<% } %>
+	<% if (hasNextPage) { %>
+		<td colspan="<%= page > 1 ? 2 : 6 %>" align="center">
+			<button onclick="window.location.href = '/?page=<%= page + 1 %>';">Next Page &gt;</button>
+		</td>
+	<% } %>
 </tr>
 <% } %>
 <%- include('footer') -%>
