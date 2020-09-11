@@ -25,6 +25,8 @@ export async function get(req, res)
         });
     }
 
-    res.writeHead(200);
+    res.writeHead(200, {
+        'Content-Type': 'application/rss+xml'
+    });
     res.end(feed.xml());
 }
