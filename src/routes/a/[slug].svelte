@@ -226,6 +226,16 @@
     <div class="article-image">
         <img alt={article.title} src={`/a/${article.image}`}>
     </div>
+	<div id="585399492">
+		<script type="text/javascript">
+			try {
+				window._mNHandle.queue.push(function (){
+					window._mNDetails.loadTag("585399492", "300x250", "585399492");
+				});
+			}
+			catch (error) {}
+		</script>
+	</div>
     <div class="article-meta">
         <h1 class="article-title">{article.title}</h1>
         <blockquote>
@@ -241,6 +251,16 @@
     <div class="article-content">
         {@html article.html}
     </div>
+	<div id="585399492">
+		<script type="text/javascript">
+			try {
+				window._mNHandle.queue.push(function (){
+					window._mNDetails.loadTag("585399492", "300x250", "585399492");
+				});
+			}
+			catch (error) {}
+		</script>
+	</div>
     <hr>
     <h3>Comments</h3>
     <div class="comments">

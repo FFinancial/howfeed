@@ -18,6 +18,16 @@
 
 <div class="content">
     <h1>Contact Us</h1>
+	<div id="585399492">
+		<script type="text/javascript">
+			try {
+				window._mNHandle.queue.push(function (){
+					window._mNDetails.loadTag("585399492", "300x250", "585399492");
+				});
+			}
+			catch (error) {}
+		</script>
+	</div>
     <div class="people">
         <div>
             <h3>Myles C. Linden</h3>
@@ -45,6 +55,16 @@
             <p><a href="mailto:webmaster@howfeed.biz">webmaster@howfeed.biz</a></p>
         </div>
     </div>
+	<div id="585399492">
+		<script type="text/javascript">
+			try {
+				window._mNHandle.queue.push(function (){
+					window._mNDetails.loadTag("585399492", "300x250", "585399492");
+				});
+			}
+			catch (error) {}
+		</script>
+	</div>
     <div style="max-width:100%;margin:0 auto;width:700px;height:440px;">
         <iframe width="700" height="440" src="https://maps.google.com/maps?width=700&amp;height=440&amp;hl=en&amp;q=1198%20Sixth%20St%2C%20San%20Jose%2C%20CA+(Title)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
     </div>
