@@ -58,16 +58,7 @@
 <div class="floaty">
     <h1 class="welcome">Welcome</h1>
     <div class="article-list">
-		<div id="585399492">
-			<script type="text/javascript">
-				try {
-					window._mNHandle.queue.push(function (){
-						window._mNDetails.loadTag("585399492", "300x250", "585399492");
-					});
-				}
-				catch (error) {}
-			</script>
-		</div>
+        <!-- ad goes here -->
     {#each articles as {title, slug, image, created_at}}
         <a href={`/a/${slug}`}>
             <div class="article-image">
@@ -82,15 +73,6 @@
         <p>No articles have been published yet :(</p>
         <p>Cheque back soon!</p>
     {/each}
-		<div id="585399492">
-			<script type="text/javascript">
-				try {
-					window._mNHandle.queue.push(function (){
-						window._mNDetails.loadTag("585399492", "300x250", "585399492");
-					});
-				}
-				catch (error) {}
-			</script>
-		</div>
+        <!-- ad goes here -->
     </div>
 </div>
