@@ -2,6 +2,33 @@
     <title>Contact Us | HOWFEED.BIZ</title>
 </svelte:head>
 
+<script>
+    let title = '', name = '', message = '';
+
+    async function sendSuggestion()
+    {
+        try {
+            const res = await fetch(`/suggestions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ title, name, message })
+            });
+            const json = await res.json();
+            if (res.status === 200) {
+                alert(json.message);
+                title = name = message = '';
+            } else {
+                alert(`Error ${res.status}: ${json.message}`);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+</script>
+
 <style>
     div.people {
         display: flex;
@@ -9,10 +36,19 @@
     }
     div.people > div {
         flex: 1 0 0;
-        padding: 1rem;
+        padding: 0.25rem 1rem;
     }
     iframe {
         max-width: 100%;
+    }
+    input[type=text], textarea {
+        width: 350px;
+    }
+    textarea {
+        height: 160px;
+    }
+    .center {
+        text-align: center;
     }
 </style>
 
@@ -46,7 +82,16 @@
             <p><a href="mailto:webmaster@howfeed.biz">webmaster@howfeed.biz</a></p>
         </div>
     </div>
+    <h1>Suggest Ideas to Us</h1>
+    <p>Do you have a request for an article or an enhancement to the site? Send it directly to us here!</p>
+    <form on:submit|preventDefault={sendSuggestion} action="/suggestions" method="POST">
+        <p>Name: <input type="text" name="name" bind:value={name} placeholder="Anonymous"></p>
+        <p>Title: <input type="text" name="title" bind:value={title}></p>
+        <p><textarea name="message" bind:value={message}></textarea></p>
+        <p><button type="submit">Send</button></p>
+    </form>
 	<!-- ad goes here -->
+    <h1 class="center">Come Find Us!</h1>
     <div style="max-width:100%;margin:0 auto;width:700px;height:440px;">
         <iframe width="700" height="440" src="https://maps.google.com/maps?width=700&amp;height=440&amp;hl=en&amp;q=1198%20Sixth%20St%2C%20San%20Jose%2C%20CA+(Title)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
     </div>

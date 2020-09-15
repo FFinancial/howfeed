@@ -9,6 +9,7 @@ import { Strategy } from 'passport-local';
 import sessionFileStore from 'session-file-store';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import fileUpload from 'express-fileupload';
+import nodemailer from 'nodemailer';
 import fs from 'fs';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -25,7 +26,8 @@ import legacyRouter from './legacy/router.js';
 require('dotenv').config();
 const FileStore = sessionFileStore(session);
 
-const { PORT, NODE_ENV, SESSION_SECRET, MONGODB_CONN } = process.env;
+const { PORT, NODE_ENV, SESSION_SECRET, MONGODB_CONN,
+        SMTP_USERNAME, SMTP_PASSWORD, SMTP_SERVER, SMTP_PORT, SMTP_RECIPIENTS } = process.env;
 const dev = NODE_ENV === 'development';
 
 mongoose.set('useNewUrlParser', true);
@@ -110,6 +112,16 @@ const isAuthor = function(req, res, next) {
         }));
     }
 };
+
+const mailer = nodemailer.createTransport({
+    host: SMTP_SERVER,
+    port: 587,
+    secure: SMTP_PORT === 465,
+    auth: {
+        user: SMTP_USERNAME,
+        pass: SMTP_PASSWORD
+    },
+});
 
 
 var app = express();
@@ -429,7 +441,44 @@ mainRouter
 			'Content-Type': 'application/rss+xml'
 		});
 		res.end(feed.xml());
-	});
+    })
+    .post('/suggestions', async function (req, res) {
+        let { name, title, message } = req.body;
+        if (!message) {
+            res.writeHead(422, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: 'No message supplied'
+            }));
+            return false;
+        }
+        name = name || 'Anonymous';
+        title = title || 'Suggestion';
+        try {
+            await mailer.sendMail({
+                from: `"HowFeed Suggestions" <${SMTP_USERNAME}>`,
+                to: SMTP_RECIPIENTS,
+                subject: title,
+                text: `Suggested by ${name}:
+
+                ${message}`
+            });
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: 'Your suggestion was delivered.'
+            }));
+        } catch (err) {
+            res.writeHead(500, {
+                'Content-Type': 'application/json'
+            });
+            res.end(JSON.stringify({
+                message: err.message
+            }));
+        }
+    });
 
 app.use(helmet())
     .use(cors())
