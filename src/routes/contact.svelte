@@ -4,10 +4,12 @@
 
 <script>
     let title = '', name = '', message = '';
+    let loading = false;
 
     async function sendSuggestion()
     {
         try {
+            loading = true;
             const res = await fetch(`/suggestions`, {
                 method: 'POST',
                 headers: {
@@ -25,6 +27,8 @@
             }
         } catch (err) {
             console.error(err);
+        } finally {
+            loading = false;
         }
     }
 </script>
@@ -88,7 +92,7 @@
         <p>Name: <input type="text" name="name" bind:value={name} placeholder="Anonymous"></p>
         <p>Title: <input type="text" name="title" bind:value={title}></p>
         <p><textarea name="message" bind:value={message}></textarea></p>
-        <p><button type="submit">Send</button></p>
+        <p><button type="submit" disabled={loading}>Send</button></p>
     </form>
 	<!-- ad goes here -->
     <h1 class="center">Come Find Us!</h1>
