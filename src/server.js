@@ -502,7 +502,7 @@ app.use(helmet())
     .use(passport.initialize())
     .use(passport.session())
     .use(compression({ threshold: 0 }))
-    .use(express.static('./static'))
+    .use(express.static('./static', { maxAge: 1000 * 3600 * 24 * 30 }))
 	.use('/', mainRouter)
 	.use('/legacy', legacyRouter)
 	.use(legacyMiddleware((req, res) => {
