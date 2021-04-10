@@ -17,6 +17,7 @@ import useragent from 'useragent';
 import RSS from 'rss';
 import path from 'path';
 import crypto from 'crypto';
+import NodeCache from 'node-cache';
 import Article from './models/article.js';
 import Category from './models/category.js';
 import User from './models/user.js';
@@ -25,6 +26,7 @@ import legacyRouter from './legacy/router.js';
 
 require('dotenv').config();
 const FileStore = sessionFileStore(session);
+const cache = new NodeCache();
 
 const { PORT, NODE_ENV, SESSION_SECRET, MONGODB_CONN,
         SMTP_USERNAME, SMTP_PASSWORD, SMTP_SERVER, SMTP_PORT, SMTP_RECIPIENTS } = process.env;
@@ -478,7 +480,88 @@ mainRouter
                 message: err.message
             }));
         }
-    });
+    })
+	.get('/api/meet', async function (req, res, next) {
+		if (req.query.token === '1445') {
+			const time = cache.get('lastMeetingTime');
+			res.writeHead(200, {
+				'Content-Type': 'application/json'
+			});
+			res.end(JSON.stringify({
+				LastMeetingTime: time ? time.toJSON() : undefined
+			}));
+		} else {
+			next();
+		}
+	})
+	.post('/api/meet', async function (req, res, next) {
+		if (req.body.token === '1445') {
+			const time = new Date();
+			const success = cache.set('lastMeetingTime', time, 3600);
+			if (success) {
+				res.writeHead(200, {
+					'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify({
+					LastMeetingTime: time.toJSON()
+				}));
+			} else {
+				res.writeHead(500, {
+					'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify({
+					Error: 'Failed to store meeting time in cache!'
+				}));
+			}
+		} else {
+			next();
+		}
+	})
+	.get('/api/memo', async function (req, res, next) {
+		if (req.query.token === '1445') {
+			const memos = cache.get('memos') || [];
+			res.writeHead(200, {
+				'Content-Type': 'application/json'
+			});
+			res.end(JSON.stringify(memos));
+		} else {
+			next();
+		}
+	})
+	.post('/api/memo', async function (req, res, next) {
+		if (req.body.token === '1445') {
+			const memo = req.body.message;
+			if (!memo) {
+				res.writeHead(400, {
+					'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify({
+					Error: 'You must provide a memo message'
+				}));
+			}
+			const memos = cache.get('memos') || [];
+			memos.push({
+				Time: new Date(),
+				Message: memo
+			});
+			const success = cache.set('memos', memos);
+			if (success) {
+				res.writeHead(200, {
+					'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify(memos));
+			} else {
+				res.writeHead(500, {
+					'Content-Type': 'application/json'
+				});
+				res.end(JSON.stringify({
+					Error: 'Failed to store memo in cache!'
+				}));
+			}
+		} else {
+			next();
+		}
+	});
 
 app.use(helmet())
     .use(cors())
