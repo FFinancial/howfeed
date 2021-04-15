@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express from 'express';
 import session from 'express-session';
 import compression from 'compression';
@@ -9,27 +10,21 @@ import { Strategy } from 'passport-local';
 import sessionFileStore from 'session-file-store';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import fileUpload from 'express-fileupload';
-import nodemailer from 'nodemailer';
 import fs from 'fs';
 import cors from 'cors';
 import helmet from 'helmet';
 import useragent from 'useragent';
-import RSS from 'rss';
 import path from 'path';
 import crypto from 'crypto';
-import NodeCache from 'node-cache';
 import Article from './models/article.js';
 import Category from './models/category.js';
 import User from './models/user.js';
 import legacyMiddleware from './legacy/middleware.js';
 import legacyRouter from './legacy/router.js';
 
-require('dotenv').config();
 const FileStore = sessionFileStore(session);
-const cache = new NodeCache();
 
-const { PORT, NODE_ENV, SESSION_SECRET, MONGODB_CONN,
-        SMTP_USERNAME, SMTP_PASSWORD, SMTP_SERVER, SMTP_PORT, SMTP_RECIPIENTS } = process.env;
+const { PORT, NODE_ENV, SESSION_SECRET, MONGODB_CONN } = process.env;
 const dev = NODE_ENV === 'development';
 
 mongoose.set('useNewUrlParser', true);
@@ -115,16 +110,6 @@ const isAuthor = function(req, res, next) {
     }
 };
 
-const mailer = nodemailer.createTransport({
-    host: SMTP_SERVER,
-    port: 587,
-    secure: SMTP_PORT === 465,
-    auth: {
-        user: SMTP_USERNAME,
-        pass: SMTP_PASSWORD
-    },
-});
-
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -149,13 +134,6 @@ mainRouter
             }));
         }
     )
-    .get('/cms/logout', (req, res, next) => {
-        req.logout();
-        req.session.destroy(function (err) {
-            if (err) next(err);
-            return res.redirect('/');
-        });
-    })
     .post('/cms/article/:edit?',
         isAuthor,
         async function(req, res, next) {
@@ -334,234 +312,7 @@ mainRouter
                 }));
             }
         }
-    )
-	.get('/a/random',
-		async function(req, res, next) {
-			var articleCount = await Article.countDocuments();
-			var random = Math.floor(Math.random() * articleCount);
-			var randomArticle = await Article.findOne().skip(random).select('slug');
-			res.writeHead(200, {
-				'Content-Type': 'application/json'
-			});
-			res.end(JSON.stringify(randomArticle));
-		}
-	)
-    .post('/me/avatar',
-        async function(req, res, next) {
-            if (!req.user) {
-                res.writeHead(401, {
-                    'Content-Type': 'application/json'
-                });
-                res.end(JSON.stringify({
-                    message: `You must be logged in to set an avatar.`
-                }));
-                return false;
-            }
-            try {
-                const { upload } = req.files;
-                if (!upload) {
-                    res.writeHead(422, {
-                        'Content-Type': 'application/json'
-                    });
-                    res.end(JSON.stringify({
-                        message: `You must supply a file.`
-                    }));
-                    return false;
-                }
-                if (!/^image\//.test(upload.mimetype)) {
-                    res.writeHead(422, {
-                        'Content-Type': 'application/json'
-                    });
-                    res.end(JSON.stringify({
-                        message: `Invalid MIME type for the uploaded image.`
-                    }));
-                    return false;
-                }
-                if (upload.truncated) {
-                    res.writeHead(422, {
-                        'Content-Type': 'application/json'
-                    });
-                    res.end(JSON.stringify({
-                        message: `Received truncated image file. Try again with a smaller file.`
-                    }));
-                    return false;
-                }
-                const ext = upload.name.match(/(\.[^.]+)$/)[0];
-                const filename = crypto.randomBytes(20).toString('hex') + ext;
-                const url = `/u/${filename}`;
-                await upload.mv('./static' + url);
-                const user = await User.findById(req.user._id);
-                req.user.avatar = user.avatar = filename;
-                await user.save();
-                res.writeHead(200, {
-                    'Content-Type': 'application/json'
-                });
-                res.end(JSON.stringify({ filename }));
-            } catch (err) {
-                res.writeHead(500, {
-                    'Content-Type': 'application/json'
-                });
-                res.end(JSON.stringify({
-                    message: `Failed to upload image: ${err}`
-                }));
-            }
-        }
-    )
-	.get('/rss.xml', async function (req, res) {
-		let year = new Date().getFullYear();
-		let feed = new RSS({
-			title: 'HowFeed.biz Articles',
-			feed_url: 'http://howfeed.biz/rss.xml',
-			site_url: 'http://howfeed.biz/',
-			image_url: 'http://howfeed.biz/logo.png',
-			language: 'en',
-			webMaster: 'webmaster@howfeed.biz',
-			copyright: `${year} FemboyFinancial Holdings Co., Ltd. (USA LLC)`
-		});
-		let articles = await Article.find().populate({
-			path: 'author',
-			select: 'realname avatar'
-		}).populate({
-			path: 'category'
-		});
-
-		for (let article of articles) {
-			feed.item({
-				title: article.title,
-				description: article.html,
-				url: `http://howfeed.biz/a/${article.slug}`,
-				categories: [ article.category.name ],
-				author: article.author.realname,
-				date: article.created_at,
-				enclosure: {
-					url: `http://howfeed.biz/a/${article.image}`
-				}
-			});
-		}
-
-		res.writeHead(200, {
-			'Content-Type': 'application/rss+xml'
-		});
-		res.end(feed.xml());
-    })
-    .post('/suggestions', async function (req, res) {
-        let { name, title, message } = req.body;
-        if (!message) {
-            res.writeHead(422, {
-                'Content-Type': 'application/json'
-            });
-            res.end(JSON.stringify({
-                message: 'No message supplied'
-            }));
-            return false;
-        }
-        name = name || 'Anonymous';
-        title = title || 'Suggestion';
-        try {
-            await mailer.sendMail({
-                from: `"HowFeed Suggestions" <${SMTP_USERNAME}>`,
-                to: SMTP_RECIPIENTS,
-                subject: title,
-                text: `Suggested by ${name}:
-
-                ${message}`
-            });
-            res.writeHead(200, {
-                'Content-Type': 'application/json'
-            });
-            res.end(JSON.stringify({
-                message: 'Your suggestion was delivered.'
-            }));
-        } catch (err) {
-            res.writeHead(500, {
-                'Content-Type': 'application/json'
-            });
-            res.end(JSON.stringify({
-                message: err.message
-            }));
-        }
-    })
-	.get('/api/meet', async function (req, res, next) {
-		if (req.query.token === '1445') {
-			const time = cache.get('lastMeetingTime');
-			res.writeHead(200, {
-				'Content-Type': 'application/json'
-			});
-			res.end(JSON.stringify({
-				LastMeetingTime: time ? time.toJSON() : undefined
-			}));
-		} else {
-			next();
-		}
-	})
-	.post('/api/meet', async function (req, res, next) {
-		if (req.body.token === '1445') {
-			const time = new Date();
-			const success = cache.set('lastMeetingTime', time, 3600);
-			if (success) {
-				res.writeHead(200, {
-					'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify({
-					LastMeetingTime: time.toJSON()
-				}));
-			} else {
-				res.writeHead(500, {
-					'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify({
-					Error: 'Failed to store meeting time in cache!'
-				}));
-			}
-		} else {
-			next();
-		}
-	})
-	.get('/api/memo', async function (req, res, next) {
-		if (req.query.token === '1445') {
-			const memos = cache.get('memos') || [];
-			res.writeHead(200, {
-				'Content-Type': 'application/json'
-			});
-			res.end(JSON.stringify(memos));
-		} else {
-			next();
-		}
-	})
-	.post('/api/memo', async function (req, res, next) {
-		if (req.body.token === '1445') {
-			const memo = req.body.message;
-			if (!memo) {
-				res.writeHead(400, {
-					'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify({
-					Error: 'You must provide a memo message'
-				}));
-			}
-			const memos = cache.get('memos') || [];
-			memos.push({
-				Time: new Date(),
-				Message: memo
-			});
-			const success = cache.set('memos', memos);
-			if (success) {
-				res.writeHead(200, {
-					'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify(memos));
-			} else {
-				res.writeHead(500, {
-					'Content-Type': 'application/json'
-				});
-				res.end(JSON.stringify({
-					Error: 'Failed to store memo in cache!'
-				}));
-			}
-		} else {
-			next();
-		}
-	});
+    );
 
 app.use(helmet())
     .use(cors())
