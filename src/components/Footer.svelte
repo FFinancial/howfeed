@@ -13,5 +13,5 @@
 </style>
 
 <div class="footer">
-    Copyright &copy; {new Date().getFullYear()} FemboyFinancial Holdings Co., Ltd. (USA LLC). All rights reserved.
+    Copyright &copy; {new Date().getFullYear()} <a href="//ff.howfeed.biz">FemboyFinancial Holdings Co., Ltd. (USA LLC)</a>. All rights reserved.
 </div>
